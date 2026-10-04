@@ -80,3 +80,9 @@ For larger programs, check the loader's 1 MiB ELF load window, actual simulated
 RAM, linker layout and stack/heap requirements. A linker declaration alone does
 not establish available memory. Linux, IREE and physical implementation need
 separate milestones; see [current status](status.md).
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.

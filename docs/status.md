@@ -1,6 +1,6 @@
 # Proton NPU status
 
-The current bare-metal **CVA6 + Ara + matrix** milestone is operational in
+The current bare-metal **scalar + vector + matrix** milestone is operational in
 Verilator. One ELF executes scalar, RVV and custom matrix instructions on the
 actual CPU model. The initial functional results below were measured on
 3 October 2026. See [portable verification records](../verification/README.md)
@@ -46,3 +46,9 @@ The supported build profile is ARM64 Ubuntu 24.04, tested in Lima on Apple Silic
 See [environment notes](environment.md) for exact source/tool choices and the
 remaining validation limit of the new clean-install bootstrap. Original runs
 reuse the validated GCC/Newlib runtime, while a clean checkout can build it.
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.

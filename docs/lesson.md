@@ -99,3 +99,9 @@ return zero on timeout; our wrapper rejects the missing success marker.
 
 Return to the ordinary example with `./scripts/ara run`. Follow
 [the waveform lesson](waveforms.md) to see instructions and result transfers.
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.

@@ -4,23 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
+<meta name="author" content="Cerebral Chips">
 <meta name="description" content="An open hardware foundation for Cerebral Chips: one RISC-V CPU, two vector lanes, and an INT8 matrix engine working under one program.">
 <title>Proton NPU · Cerebral Chips</title>
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body><a class="skip" href="#main">Skip to content</a>
 <header class="top">
-<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><span class="org">Cerebral Chips<br>Hardware engineering</span>
+<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><a class="org" href="https://www.cerebralchips.com" aria-label="Cerebral Chips company website"><strong>Cerebral Chips</strong><span>Every machine should think.</span></a>
 </div>
 </header>
 <div class="layout">
 <aside class="side">
 <div class="nav-label">Architecture guide</div>
-<nav aria-label="Documentation"><a href="index.html" aria-current="page">Proton NPU</a><a href="cva6.html">CVA6 · scalar</a><a href="ara.html">Ara · vector</a><a href="matrix.html">Matrix · INT8</a><a href="contributing.html">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
+<nav aria-label="Documentation"><a href="index.html" aria-current="page">Proton NPU</a><a href="cva6.html">RISC-V · scalar</a><a href="ara.html">RVV 1.0 · vector</a><a href="matrix.html">INT8 · matrix</a><a href="contributing.html">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
 </nav>
 <div class="secondary">
 <div class="nav-label">Project</div>
-<nav aria-label="Project resources"><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
+<nav aria-label="Project resources"><a href="https://www.cerebralchips.com">Cerebral Chips website ↗</a><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
 </nav>
 </div><small>Initial hardware milestone<br>RV64 · RVV · INT8 matrix<br>Documentation: 4 October 2026</small>
 </aside>
@@ -29,16 +30,16 @@
 <div class="eyebrow">System architecture / milestone 01</div>
 <h1>Proton NPU</h1>
 <p class="lead">An open hardware foundation for Cerebral Chips: one RISC-V CPU, two vector lanes, and an INT8 matrix engine working under one program.</p>
-<div class="tags"><span class="tag">CVA6 + Ara</span><span class="tag">4 × 4 matrix mesh</span><span class="tag">Bare-metal RTL simulation</span>
+<div class="tags"><span class="tag">RV64 + RVV 1.0</span><span class="tag">4 × 4 matrix mesh</span><span class="tag">Bare-metal RTL simulation</span>
 </div>
 </header>
 <div class="callout">
-<p><strong>Our first working hardware foundation.</strong> One bare-metal program executes scalar, vector and custom matrix instructions on real CVA6 + Ara + matrix RTL. “Proton NPU” is the project name; the current architecture is a single-core RISC-V system with attached vector and matrix execution units.</p>
+<p><strong>Our first working hardware foundation.</strong> One bare-metal program executes scalar, vector and custom matrix instructions on real scalar + vector + matrix RTL. “Proton NPU” is the project name; the current architecture is a single-core RISC-V system with attached vector and matrix execution units.</p>
 </div>
 <div class="facts">
 <div class="fact"><b>1</b><span>RV64 CPU core</span>
 </div>
-<div class="fact"><b>2</b><span>Ara vector lanes</span>
+<div class="fact"><b>2</b><span>RVV vector lanes</span>
 </div>
 <div class="fact"><b>16</b><span>packed INT8 matrix PEs</span>
 </div>
@@ -46,30 +47,30 @@
 </div>
 </div>
 <h2>The complete system</h2>
-<figure class="figure"><a href="assets/system.svg" aria-label="Open System block diagram: CVA6, Ara, matrix and AXI at full size"><img src="assets/system.svg" alt="System block diagram: CVA6, Ara, matrix and AXI"></a>
+<figure class="figure"><a href="assets/system.svg" aria-label="Open System block diagram: RISC-V core, RVV vector unit, matrix engine and AXI at full size"><img src="assets/system.svg" alt="System block diagram: RISC-V core, RVV vector unit, matrix engine and AXI"></a>
 <figcaption>Blue routes instructions and completions. Teal carries memory traffic. The dashed amber path carries matrix commands. The matrix is an AXI target, not a memory-fetching DMA engine. <a href="assets/system.svg">Open full-size diagram ↗</a>
 </figcaption>
 </figure>
 <div class="cards">
 <article class="card"><span class="number">01</span>
-<h3>CVA6</h3>
+<h3>64-bit RISC-V core</h3>
 <p>Fetches instructions, executes scalar C and retires all instructions in order.</p><a href="cva6.html">Explore the block →</a>
 </article>
 <article class="card"><span class="number">02</span>
-<h3>Ara</h3>
+<h3>RVV 1.0 vector unit</h3>
 <p>Executes RVV operations across two lanes and accesses shared RAM through AXI.</p><a href="ara.html">Explore the block →</a>
 </article>
 <article class="card"><span class="number">03</span>
-<h3>Matrix</h3>
+<h3>INT8 matrix engine</h3>
 <p>Computes signed INT8 tiled products using sixteen packed-dot-product PEs.</p><a href="matrix.html">Explore the block →</a>
 </article>
 </div>
 <h2>Follow one workload</h2>
 <ol class="steps">
-<li><strong>Scalar setup:</strong> CVA6 prepares dimensions and pointers in ordinary C.</li>
-<li><strong>Vector preparation:</strong> explicit RVV intrinsics generate input-processing instructions for Ara.</li>
+<li><strong>Scalar setup:</strong> The scalar core prepares dimensions and pointers in ordinary C.</li>
+<li><strong>Vector preparation:</strong> explicit RVV intrinsics generate input-processing instructions for the vector unit.</li>
 <li><strong>Matrix computation:</strong> the C library packs A and transposed B through scalar MMIO, then issues <code>mzero</code> and <code>mmacc</code>.</li>
-<li><strong>Vector finishing:</strong> results copied to RAM are processed by Ara.</li>
+<li><strong>Vector finishing:</strong> results copied to RAM are processed by the vector unit.</li>
 <li><strong>Verification:</strong> scalar C compares every result with independently generated expectations; host tools reconcile instruction and hardware traces.</li>
 </ol>
 <h2>What is verified</h2>
@@ -111,7 +112,7 @@ cd proton-npu
 </pre>
 <p><a href="contributing.html">Contributor map and verification gates →</a>
 </p>
-<footer class="footer"><span>Cerebral Chips · Proton NPU<br>Source-backed architecture notes.</span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/index.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
+<footer class="footer"><span class="signature"><a href="https://www.cerebralchips.com">Cerebral Chips</a> · Proton NPU<br>Every machine should think.<br><small>© 2026 Cerebral Chips · <a href="https://github.com/cerebralchips/proton-npu/blob/hardware/THIRD_PARTY.md">Open-source credits &amp; licenses</a></small></span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/index.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
 </footer>
 </main>
 </div>

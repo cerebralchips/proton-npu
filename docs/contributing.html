@@ -4,23 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
+<meta name="author" content="Cerebral Chips">
 <meta name="description" content="A map of the source tree, the supported build environment, and the checks that protect the working hardware milestone.">
 <title>Contribute to Proton NPU · Cerebral Chips</title>
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body><a class="skip" href="#main">Skip to content</a>
 <header class="top">
-<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><span class="org">Cerebral Chips<br>Hardware engineering</span>
+<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><a class="org" href="https://www.cerebralchips.com" aria-label="Cerebral Chips company website"><strong>Cerebral Chips</strong><span>Every machine should think.</span></a>
 </div>
 </header>
 <div class="layout">
 <aside class="side">
 <div class="nav-label">Architecture guide</div>
-<nav aria-label="Documentation"><a href="index.html">Proton NPU</a><a href="cva6.html">CVA6 · scalar</a><a href="ara.html">Ara · vector</a><a href="matrix.html">Matrix · INT8</a><a href="contributing.html" aria-current="page">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
+<nav aria-label="Documentation"><a href="index.html">Proton NPU</a><a href="cva6.html">RISC-V · scalar</a><a href="ara.html">RVV 1.0 · vector</a><a href="matrix.html">INT8 · matrix</a><a href="contributing.html" aria-current="page">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
 </nav>
 <div class="secondary">
 <div class="nav-label">Project</div>
-<nav aria-label="Project resources"><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
+<nav aria-label="Project resources"><a href="https://www.cerebralchips.com">Cerebral Chips website ↗</a><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
 </nav>
 </div><small>Initial hardware milestone<br>RV64 · RVV · INT8 matrix<br>Documentation: 4 October 2026</small>
 </aside>
@@ -44,7 +45,7 @@
 </tr>
 <tr><td><code>hardware/matrix/vendor/</code></td><td>Pinned compute RTL with original notices</td>
 </tr>
-<tr><td><code>patches/ara/</code></td><td>Reviewable Ara build, decoder and SoC integration changes</td>
+<tr><td><code>patches/ara/</code></td><td>Reviewable Vector build, decoder and SoC integration changes</td>
 </tr>
 <tr><td><code>patches/cva6/</code></td><td>CPU ordering and accelerator bookkeeping changes</td>
 </tr>
@@ -91,7 +92,7 @@ cd proton-npu
 python3 -m http.server 8000</code>
 </pre>
 <p class="small">The lightweight repository CI checks source packaging, documentation links and deterministic workload data. Full RTL verification remains a separate, explicit command and is not implied by that CI badge.</p>
-<footer class="footer"><span>Cerebral Chips · Proton NPU<br>Source-backed architecture notes.</span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/contributing.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
+<footer class="footer"><span class="signature"><a href="https://www.cerebralchips.com">Cerebral Chips</a> · Proton NPU<br>Every machine should think.<br><small>© 2026 Cerebral Chips · <a href="https://github.com/cerebralchips/proton-npu/blob/hardware/THIRD_PARTY.md">Open-source credits &amp; licenses</a></small></span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/contributing.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
 </footer>
 </main>
 </div>

@@ -9,9 +9,9 @@ The HTML pages use only local CSS and SVG assets.
 | Guide | Contents |
 | --- | --- |
 | [Proton NPU](index.html) | Complete system, data flow and measured baseline |
-| [CVA6](cva6.html) | Scalar CPU, conceptual pipeline, retirement and command ordering |
-| [Ara](ara.html) | RVV execution, two-lane organization and memory path |
-| [Matrix](matrix.html) | Packed INT8 PEs, buffers, command contract and result handling |
+| [64-bit RISC-V core](cva6.html) | Scalar CPU, conceptual pipeline, retirement and command ordering |
+| [RVV 1.0 vector unit](ara.html) | RVV execution, two-lane organization and memory path |
+| [INT8 matrix engine](matrix.html) | Packed INT8 PEs, buffers, command contract and result handling |
 | [Contributor guide](contributing.html) | Source map and verification workflow |
 | [PE explorer](pe-array-explorer.html) | Interactive arithmetic teaching model |
 
@@ -19,3 +19,9 @@ Technical notes: [setup](environment.md), [first lesson](lesson.md),
 [waveforms](waveforms.md), [matrix design contract](matrix-design.md),
 [matrix commands](matrix-running.md), [status](status.md),
 and [portable verification records](../verification/README.md).
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.

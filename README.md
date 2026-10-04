@@ -1,14 +1,17 @@
 # Proton NPU
 
-**Cerebral Chips' open hardware platform for scalar, vector and matrix computing.**
-One CVA6 RISC-V CPU runs a single bare-metal ELF containing scalar instructions,
-RVV instructions executed by Ara, and custom instructions for a 4×4 integer PE mesh.
+**[Cerebral Chips](https://www.cerebralchips.com) · Every machine should think.**
+
+Proton NPU is our open hardware platform for scalar, vector and matrix computing.
+One 64-bit RISC-V core runs a single bare-metal ELF containing scalar instructions,
+RVV 1.0 vector instructions, and custom instructions for a 4×4 INT8 matrix engine.
 The current milestone is verified in RTL simulation on Apple Silicon through an
 ARM64 Linux VM.
 
 ![Proton NPU system architecture](docs/assets/system.svg)
 
-[Architecture website](https://cerebralchips.github.io/proton-npu/) ·
+[Company website](https://www.cerebralchips.com) ·
+[Architecture guide](https://cerebralchips.github.io/proton-npu/) ·
 [Documentation index](docs/README.md) · [Run guide](docs/matrix-running.md) ·
 [Verification records](verification/README.md) · [Contributing](CONTRIBUTING.md)
 
@@ -16,9 +19,9 @@ ARM64 Linux VM.
 
 | Block | Configuration |
 | --- | --- |
-| CVA6 | One RV64 application core; actual CPU pipeline enabled |
-| Ara | RVV 1.0, two lanes, VLEN 2048 bits, ELEN 64 bits |
-| Matrix | 4×4 PEs, four signed INT8 products per PE, INT32 accumulation |
+| 64-bit RISC-V core | One RV64 application core; actual CPU pipeline enabled |
+| RVV 1.0 vector unit | RVV 1.0, two lanes, VLEN 2048 bits, ELEN 64 bits |
+| INT8 matrix engine | 4×4 PEs, four signed INT8 products per PE, INT32 accumulation |
 | Matrix operation | `C[4][4] += A[4][16] × transpose(BT[4][16])`, modulo 2³² |
 | Integration | Custom-1 `mzero` / `mmacc`; AXI-Lite mapped buffers at `0xe0000000` |
 | Software | LLVM 20.1.0, RVV intrinsics and inline `.insn`; Newlib bare-metal runtime |
@@ -50,7 +53,7 @@ for overrides, runtime selection and the validation limits of the fresh setup pa
 Run only one build/simulation at a time; the launcher enforces a guest lock.
 
 ```bash
-./scripts/ara hello          # Scalar hello-world on CVA6 + Ara
+./scripts/ara hello          # Scalar hello-world on the CPU + vector system
 ./scripts/ara run            # Scalar + vector C example, compared with Spike
 ./scripts/ara matrix-wave    # Combined ELF, FST capture and independent tile checks
 ./scripts/ara latest matrix-wave
@@ -90,7 +93,7 @@ Full logs, ELFs and waveforms are regenerated locally under ignored `artifacts/`
 | `verification/` | Portable verification snapshots |
 | `sources.lock.json` | Upstream revisions and release checksums |
 
-CVA6 and Ara are fetched at matched revisions into ignored `upstream/`; they are
+The scalar and vector IPs are fetched at matched revisions into ignored `upstream/`; they are
 not copied wholesale into this repository. `provision` reconstructs the source
 assembly from the lock and reviewable patches. Agent guidance is in [AGENTS.md](AGENTS.md).
 
@@ -98,5 +101,11 @@ assembly from the lock and reviewable patches. Agent guidance is in [AGENTS.md](
 
 Cerebral Chips' original contributions use [Apache-2.0](LICENSE). Third-party IP,
 adaptations and patches retain their applicable licenses. See [THIRD_PARTY.md](THIRD_PARTY.md)
-for CVA6, Ara, Quadrilatero, runtime and tool attribution. Upstream licenses and
+for upstream hardware, runtime and tool attribution. Upstream licenses and
 copyright notices are preserved; the root license does not replace them.
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.

@@ -4,37 +4,38 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
-<meta name="description" content="Two lanes execute vector instructions from CVA6 using wide architectural registers and an AXI path to shared memory.">
-<title>Ara: the vector unit · Cerebral Chips</title>
+<meta name="author" content="Cerebral Chips">
+<meta name="description" content="Two lanes execute vector instructions from the scalar core using wide architectural registers and an AXI path to shared memory.">
+<title>RVV 1.0 vector unit · Cerebral Chips</title>
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body><a class="skip" href="#main">Skip to content</a>
 <header class="top">
-<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><span class="org">Cerebral Chips<br>Hardware engineering</span>
+<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><a class="org" href="https://www.cerebralchips.com" aria-label="Cerebral Chips company website"><strong>Cerebral Chips</strong><span>Every machine should think.</span></a>
 </div>
 </header>
 <div class="layout">
 <aside class="side">
 <div class="nav-label">Architecture guide</div>
-<nav aria-label="Documentation"><a href="index.html">Proton NPU</a><a href="cva6.html">CVA6 · scalar</a><a href="ara.html" aria-current="page">Ara · vector</a><a href="matrix.html">Matrix · INT8</a><a href="contributing.html">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
+<nav aria-label="Documentation"><a href="index.html">Proton NPU</a><a href="cva6.html">RISC-V · scalar</a><a href="ara.html" aria-current="page">RVV 1.0 · vector</a><a href="matrix.html">INT8 · matrix</a><a href="contributing.html">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
 </nav>
 <div class="secondary">
 <div class="nav-label">Project</div>
-<nav aria-label="Project resources"><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
+<nav aria-label="Project resources"><a href="https://www.cerebralchips.com">Cerebral Chips website ↗</a><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
 </nav>
 </div><small>Initial hardware milestone<br>RV64 · RVV · INT8 matrix<br>Documentation: 4 October 2026</small>
 </aside>
 <main id="main">
 <header class="hero">
 <div class="eyebrow">Block 02 / data-parallel execution</div>
-<h1>Ara: the vector unit</h1>
-<p class="lead">Two lanes execute vector instructions from CVA6 using wide architectural registers and an AXI path to shared memory.</p>
+<h1>RVV 1.0 vector unit</h1>
+<p class="lead">Two lanes execute vector instructions from the scalar core using wide architectural registers and an AXI path to shared memory.</p>
 <div class="tags"><span class="tag">RVV 1.0</span><span class="tag">VLEN 2,048 bits</span><span class="tag">ELEN 64 bits</span>
 </div>
 </header>
-<h2>Vector execution attached to CVA6</h2>
-<p>Ara implements RVV instructions. A vector register is much wider than a scalar register, and its storage and processing are spread across the lanes. VLEN describes architectural register capacity; the lane count describes physical execution resources.</p>
-<figure class="figure"><a href="assets/ara.svg" aria-label="Open Two-lane Ara vector architecture at full size"><img src="assets/ara.svg" alt="Two-lane Ara vector architecture"></a>
+<h2>RISC-V vector execution</h2>
+<p>The vector unit implements the RISC-V Vector 1.0 instruction set. A vector register is much wider than a scalar register, and its storage and processing are spread across the lanes. VLEN describes architectural register capacity; the lane count describes physical execution resources.</p>
+<figure class="figure"><a href="assets/ara.svg" aria-label="Open Two-lane RVV 1.0 vector architecture at full size"><img src="assets/ara.svg" alt="Two-lane RVV 1.0 vector architecture"></a>
 <figcaption>The drawing summarizes control, register storage, arithmetic and vector memory access. Shared mask, slide and reduction resources are omitted for clarity. <a href="assets/ara.svg">Open full-size diagram ↗</a>
 </figcaption>
 </figure>
@@ -71,10 +72,10 @@ __riscv_vse8_v_i8m1(dst, x, vl);</code>
 </pre>
 <p>The example loads signed bytes, adds one to each active element and writes the result to RAM. The matrix library later packs those bytes into its local A buffer. After matrix computation, a second RVV loop processes the INT32 outputs.</p>
 <h2>Contributor starting points</h2>
-<div class="source-links"><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/examples/scalar_vector/main.c">Scalar + RVV example ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/examples/scalar_vector_matrix/main.c">Combined workload ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/sources.lock.json">Ara revision and configuration ↗</a>
+<div class="source-links"><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/examples/scalar_vector/main.c">Scalar + RVV example ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/examples/scalar_vector_matrix/main.c">Combined workload ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/sources.lock.json">Vector source revision and configuration ↗</a>
 </div>
 <p>Use <code>./scripts/ara smoke</code> for the baseline or <code>./scripts/ara matrix-smoke</code> for the matrix-enabled system.</p>
-<footer class="footer"><span>Cerebral Chips · Proton NPU<br>Source-backed architecture notes.</span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/ara.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
+<footer class="footer"><span class="signature"><a href="https://www.cerebralchips.com">Cerebral Chips</a> · Proton NPU<br>Every machine should think.<br><small>© 2026 Cerebral Chips · <a href="https://github.com/cerebralchips/proton-npu/blob/hardware/THIRD_PARTY.md">Open-source credits &amp; licenses</a></small></span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/ara.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
 </footer>
 </main>
 </div>

@@ -4,36 +4,37 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
+<meta name="author" content="Cerebral Chips">
 <meta name="description" content="Sixteen processing elements compute small tiles, while a C library assembles those tiles into larger matrix products.">
-<title>Matrix: the INT8 engine · Cerebral Chips</title>
+<title>INT8 matrix engine · Cerebral Chips</title>
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body><a class="skip" href="#main">Skip to content</a>
 <header class="top">
-<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><span class="org">Cerebral Chips<br>Hardware engineering</span>
+<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><a class="org" href="https://www.cerebralchips.com" aria-label="Cerebral Chips company website"><strong>Cerebral Chips</strong><span>Every machine should think.</span></a>
 </div>
 </header>
 <div class="layout">
 <aside class="side">
 <div class="nav-label">Architecture guide</div>
-<nav aria-label="Documentation"><a href="index.html">Proton NPU</a><a href="cva6.html">CVA6 · scalar</a><a href="ara.html">Ara · vector</a><a href="matrix.html" aria-current="page">Matrix · INT8</a><a href="contributing.html">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
+<nav aria-label="Documentation"><a href="index.html">Proton NPU</a><a href="cva6.html">RISC-V · scalar</a><a href="ara.html">RVV 1.0 · vector</a><a href="matrix.html" aria-current="page">INT8 · matrix</a><a href="contributing.html">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
 </nav>
 <div class="secondary">
 <div class="nav-label">Project</div>
-<nav aria-label="Project resources"><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
+<nav aria-label="Project resources"><a href="https://www.cerebralchips.com">Cerebral Chips website ↗</a><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
 </nav>
 </div><small>Initial hardware milestone<br>RV64 · RVV · INT8 matrix<br>Documentation: 4 October 2026</small>
 </aside>
 <main id="main">
 <header class="hero">
 <div class="eyebrow">Block 03 / packed dot products</div>
-<h1>Matrix: the INT8 engine</h1>
+<h1>INT8 matrix engine</h1>
 <p class="lead">Sixteen processing elements compute small tiles, while a C library assembles those tiles into larger matrix products.</p>
 <div class="tags"><span class="tag">INT8 × INT8</span><span class="tag">INT32 accumulation</span><span class="tag">Custom-1 commands</span>
 </div>
 </header>
 <h2>A small, explicit matrix engine</h2>
-<p>We reuse the integer MAC, processing element and mesh RTL from Quadrilatero. Our integration adds the tile buffers, scheduling controller, AXI target and custom command path. Each PE computes a packed dot product of four signed byte pairs and adds an INT32 partial sum.</p>
+<p>The engine combines open-source integer compute RTL with our tile buffers, scheduling controller, AXI target and custom command path. Each PE computes a packed dot product of four signed byte pairs and adds an INT32 partial sum.</p>
 <figure class="figure"><a href="assets/matrix.svg" aria-label="Open 4 by 4 packed INT8 PE mesh at full size"><img src="assets/matrix.svg" alt="4 by 4 packed INT8 PE mesh"></a>
 <figcaption>Mesh rows represent K groups, not output matrix rows. The controller streams the four A rows with staggered timing and gathers the results into a separate C tile buffer. <a href="assets/matrix.svg">Open full-size diagram ↗</a>
 </figcaption>
@@ -85,7 +86,7 @@
 </div>
 <div class="source-links"><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/hardware/matrix">Owned RTL ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/examples/scalar_vector_matrix/matrix.c">Tiling library ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/tests/matrix">Independent tests ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/hardware/matrix/vendor/quadrilatero/provenance.json">Upstream provenance ↗</a>
 </div>
-<footer class="footer"><span>Cerebral Chips · Proton NPU<br>Source-backed architecture notes.</span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
+<footer class="footer"><span class="signature"><a href="https://www.cerebralchips.com">Cerebral Chips</a> · Proton NPU<br>Every machine should think.<br><small>© 2026 Cerebral Chips · <a href="https://github.com/cerebralchips/proton-npu/blob/hardware/THIRD_PARTY.md">Open-source credits &amp; licenses</a></small></span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
 </footer>
 </main>
 </div>

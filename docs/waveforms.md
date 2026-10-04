@@ -110,3 +110,9 @@ python3 scripts/lab/wave-signals.py "$(python3 scripts/lab/latest.py fst)"
 
 Wave content and exported tables were checked programmatically. Surfer is installed
 in the existing VS Code setup; its GUI interaction was not automated here.
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.

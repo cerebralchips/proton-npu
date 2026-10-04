@@ -1,12 +1,12 @@
 # Matrix v1 contract
 
-This is a custom bare-metal extension of the pinned two-lane CVA6 + Ara system.
+This is a custom bare-metal extension of the Proton NPU scalar and two-lane vector system.
 It is not the RISC-V VME instruction set. Linux, IREE, DMA, interrupts, context
 switching, floating point and output requantization are outside this milestone.
 
 ## Arithmetic and storage
 
-The unmodified Quadrilatero integer mesh contains 4×4 processing elements.
+The open-source integer mesh contains 4×4 processing elements.
 Each PE computes four signed INT8 products plus an INT32 partial sum. Matrix v1
 always uses this INT8 mode. An operation performs
 `C[4][4] += A[4][16] × transpose(BT[4][16])`, modulo 2^32.
@@ -91,3 +91,9 @@ reuses its three compute RTL files and adds our local buffers, controller, AXI
 target, command router and CPU integration. Provenance and source hashes are in
 `hardware/matrix/vendor/quadrilatero/provenance.json`. The integer mesh is
 configured with FPU=0 and ENABLE_SIMD=1.
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.

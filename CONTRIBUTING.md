@@ -24,7 +24,7 @@ Target the `hardware` branch. Keep changes focused and preserve passing evidence
 | Documentation / packaging | `python3 tests/repository/check.py`; inspect HTML on desktop/mobile |
 | Bare-metal program | Run that application and check actual RTL completion and results |
 | Matrix RTL | `matrix-unit`, `matrix`, `matrix-wave` |
-| CPU / Ara / integration | Above, then `matrix-smoke`, `matrix-negative`, `smoke` |
+| CPU / vector / integration | Above, then `matrix-smoke`, `matrix-negative`, `smoke` |
 
 Every hardware command is `./scripts/ara COMMAND`. Run them serially: upstream
 application objects are shared. A simulator return code of zero is insufficient;
@@ -46,3 +46,18 @@ The PE explorer is a teaching model; never cite it as proof of RTL execution.
 Preserve upstream license notices and update [THIRD_PARTY.md](THIRD_PARTY.md) when
 adding a dependency. Original contributions are Apache-2.0 unless a file's
 existing license requires otherwise.
+
+## Public documentation style
+
+Use **64-bit RISC-V core**, **RVV 1.0 vector unit**, and **INT8 matrix engine**
+for architecture titles and block labels. Keep concrete upstream names where
+contributors need them for source pins, commands, signal paths and attribution.
+Preserve all upstream notices and [third-party credits](THIRD_PARTY.md).
+Use the linked **Cerebral Chips** name and **Every machine should think.** signature
+on public guides; the company website is https://www.cerebralchips.com.
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.

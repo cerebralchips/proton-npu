@@ -1,24 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 775" role="img" aria-labelledby="title desc">
-<title id="title">Ara two-lane vector architecture</title>
-<desc id="desc">CVA6 sends RVV instructions to the dispatcher and sequencer. Two execution lanes contain portions of the vector register file and vector arithmetic. The load-store unit accesses system memory through AXI.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 819" role="img" aria-labelledby="title desc">
+<title id="title">RVV 1.0 two-lane vector architecture</title>
+<desc id="desc">The scalar core sends RVV instructions to the dispatcher and sequencer. Two execution lanes contain portions of the vector register file and vector arithmetic. The load-store unit accesses system memory through AXI.</desc>
 <defs>
-<marker id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<marker markerUnits="userSpaceOnUse" id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
 <path d="M0,0 L8,4 L0,8" fill="#1764d6"/>
 </marker>
-<marker id="teal" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<marker markerUnits="userSpaceOnUse" id="teal" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
 <path d="M0,0 L8,4 L0,8" fill="#087e8b"/>
 </marker>
-<marker id="amber" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<marker markerUnits="userSpaceOnUse" id="amber" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
 <path d="M0,0 L8,4 L0,8" fill="#ab6000"/>
 </marker>
 </defs>
-<rect width="1000" height="775" fill="white"/>
+<rect width="1000" height="819" fill="white"/>
 <g font-family="system-ui,-apple-system,Segoe UI,sans-serif" fill="#142b3a">
 <rect x="300" y="30" width="400" height="100" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="318" y="62" font-size="21" fill="#1764d6" font-weight="650">CVA6 RVV request</text>
+<text x="318" y="62" font-size="21" fill="#1764d6" font-weight="650">Scalar core RVV request</text>
 <text x="318" y="91" font-size="15" fill="#142b3a" font-weight="400">Vector instruction + scalar operands</text>
 <rect x="250" y="185" width="500" height="106" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
-<text x="268" y="217" font-size="21" fill="#087e8b" font-weight="650">Ara dispatcher + sequencer</text>
+<text x="268" y="217" font-size="21" fill="#087e8b" font-weight="650">Vector dispatcher + sequencer</text>
 <text x="268" y="246" font-size="15" fill="#142b3a" font-weight="400">Decode RVV, configure VL/SEW, track hazards</text>
 <path d="M500 130 V185" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
 <rect x="65" y="355" width="375" height="150" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
@@ -40,5 +40,11 @@
 <path d="M747 505 V620 H710" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
 <text x="80" y="710" font-size="18" fill="#142b3a" font-weight="600">VLEN = 2,048 bits per architectural vector register; ELEN = 64 bits.</text>
 <text x="80" y="739" font-size="14" fill="#536979" font-weight="400">Two lanes are execution resources, not two CPU cores. Shared mask / slide / reduction resources are omitted.</text>
+</g>
+<g font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12" fill="#536979">
+<line x1="30" y1="779" x2="970" y2="779" stroke="#dbe4ea"/>
+<text x="30" y="803">Cerebral Chips · Proton NPU</text>
+<text x="500" y="803" font-size="12" fill="#536979" text-anchor="middle">Every machine should think.</text>
+<a href="https://www.cerebralchips.com"><text x="970" y="803" text-anchor="end">cerebralchips.com</text></a>
 </g>
 </svg>

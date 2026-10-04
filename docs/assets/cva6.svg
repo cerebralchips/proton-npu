@@ -1,59 +1,63 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 505" role="img" aria-labelledby="title desc">
-<title id="title">CVA6 pipeline and accelerator dispatch</title>
-<desc id="desc">Conceptual six-stage pipeline: PC generation, fetch, decode, issue, execute and commit. Scalar instructions use scalar execution units. Accelerator instructions use a tagged non-speculative dispatch path.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 735" role="img" aria-labelledby="title desc">
+<title id="title">64-bit RISC-V core: pipeline and accelerator dispatch</title>
+<desc id="desc">Six conceptual stages run left to right: PC generation, fetch, decode, issue, execute and commit. The issue stage connects to a tagged accelerator dispatch path; execute connects to scalar execution. Separate downward request and upward response arrows connect dispatch to the vector or matrix unit. The routes do not cross.</desc>
 <defs>
-<marker id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
-<path d="M0,0 L8,4 L0,8" fill="#1764d6"/>
-</marker>
-<marker id="teal" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
-<path d="M0,0 L8,4 L0,8" fill="#087e8b"/>
-</marker>
-<marker id="amber" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
-<path d="M0,0 L8,4 L0,8" fill="#ab6000"/>
-</marker>
+<marker id="arrow" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto-start-reverse"><path d="M1,1 L9,5 L1,9 Z" fill="#1764d6"/></marker>
+<marker id="response" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto-start-reverse"><path d="M1,1 L9,5 L1,9 Z" fill="#087e8b"/></marker>
 </defs>
-<rect width="1000" height="505" fill="white"/>
+<rect width="1040" height="735" fill="white"/>
 <g font-family="system-ui,-apple-system,Segoe UI,sans-serif" fill="#142b3a">
-<text x="30" y="35" font-size="23" fill="#1764d6" font-weight="650">CVA6: one architectural instruction stream</text>
-<rect x="30" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="48" y="112" font-size="21" fill="#1764d6" font-weight="650">PC gen</text>
-<text x="42" y="137" font-size="11" fill="#142b3a" font-weight="400">Select next PC</text>
-<path d="M172 116 H187" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
-<rect x="187" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="205" y="112" font-size="21" fill="#1764d6" font-weight="650">Fetch</text>
-<text x="199" y="137" font-size="11" fill="#142b3a" font-weight="400">Instruction cache</text>
-<path d="M329 116 H344" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
-<rect x="344" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="362" y="112" font-size="21" fill="#1764d6" font-weight="650">Decode</text>
-<text x="356" y="137" font-size="11" fill="#142b3a" font-weight="400">Recognize operation</text>
-<path d="M486 116 H501" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
-<rect x="501" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="519" y="112" font-size="21" fill="#1764d6" font-weight="650">Issue</text>
-<text x="513" y="137" font-size="11" fill="#142b3a" font-weight="400">Read operands</text>
-<path d="M643 116 H658" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
-<rect x="658" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="676" y="112" font-size="21" fill="#1764d6" font-weight="650">Execute</text>
-<text x="670" y="137" font-size="11" fill="#142b3a" font-weight="400">ALU / FPU / LSU</text>
-<path d="M800 116 H815" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
-<rect x="815" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="833" y="112" font-size="21" fill="#1764d6" font-weight="650">Commit</text>
-<text x="827" y="137" font-size="11" fill="#142b3a" font-weight="400">Retire in order</text>
-<rect x="75" y="275" width="240" height="112" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="93" y="307" font-size="21" fill="#1764d6" font-weight="650">Scalar execution</text>
-<text x="93" y="336" font-size="15" fill="#142b3a" font-weight="400">Integer + FP registers</text>
-<text x="93" y="359" font-size="15" fill="#142b3a" font-weight="400">Scalar arithmetic / memory</text>
-<rect x="375" y="275" width="255" height="112" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="393" y="307" font-size="21" fill="#1764d6" font-weight="650">Accelerator dispatch</text>
-<text x="393" y="336" font-size="15" fill="#142b3a" font-weight="400">Wait for retirement slot 0</text>
-<text x="393" y="359" font-size="15" fill="#142b3a" font-weight="400">Tag request; await response</text>
-<rect x="700" y="275" width="245" height="112" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
-<text x="718" y="307" font-size="21" fill="#087e8b" font-weight="650">Ara / matrix</text>
-<text x="718" y="336" font-size="15" fill="#142b3a" font-weight="400">One selected destination</text>
-<text x="718" y="359" font-size="15" fill="#142b3a" font-weight="400">Result + original tag</text>
-<path d="M572 190 V245 H502 V275" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
-<path d="M729 190 V230 H195 V275" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
-<path d="M630 330 H700" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)" marker-start="url(#blue)"/>
-<text x="75" y="438" font-size="17" fill="#142b3a" font-weight="600">Matrix serialization blocks younger issue until completion.</text>
-<text x="75" y="468" font-size="14" fill="#536979" font-weight="400">Conceptual six-stage view. Stage names summarize the CVA6 flow; accelerator execution has variable latency.</text>
-</g>
-</svg>
+<text x="30" y="39" font-size="25" font-weight="650" fill="#1764d6">64-bit RISC-V core</text>
+<text x="30" y="67" font-size="15" fill="#536979">One architectural instruction stream · six conceptual stages</text>
+<rect x="30" y="108" width="130" height="108" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.5"/>
+<text x="45" y="147" font-size="21" fill="#1764d6" font-weight="650" text-anchor="start">PC gen</text>
+<text x="45" y="176" font-size="11" fill="#142b3a" font-weight="400" text-anchor="start">Select next PC</text>
+<path d="M166 152 H191" fill="none" stroke="#1764d6" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="197" y="108" width="130" height="108" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.5"/>
+<text x="212" y="147" font-size="21" fill="#1764d6" font-weight="650" text-anchor="start">Fetch</text>
+<text x="212" y="176" font-size="11" fill="#142b3a" font-weight="400" text-anchor="start">Instruction cache</text>
+<path d="M333 152 H358" fill="none" stroke="#1764d6" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="364" y="108" width="130" height="108" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.5"/>
+<text x="379" y="147" font-size="21" fill="#1764d6" font-weight="650" text-anchor="start">Decode</text>
+<text x="379" y="176" font-size="11" fill="#142b3a" font-weight="400" text-anchor="start">Recognize operation</text>
+<path d="M500 152 H525" fill="none" stroke="#1764d6" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="531" y="108" width="130" height="108" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.5"/>
+<text x="546" y="147" font-size="21" fill="#1764d6" font-weight="650" text-anchor="start">Issue</text>
+<text x="546" y="176" font-size="11" fill="#142b3a" font-weight="400" text-anchor="start">Read operands</text>
+<path d="M667 152 H692" fill="none" stroke="#1764d6" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="698" y="108" width="130" height="108" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.5"/>
+<text x="713" y="147" font-size="21" fill="#1764d6" font-weight="650" text-anchor="start">Execute</text>
+<text x="713" y="176" font-size="11" fill="#142b3a" font-weight="400" text-anchor="start">ALU / FPU / LSU</text>
+<path d="M834 152 H859" fill="none" stroke="#1764d6" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="865" y="108" width="130" height="108" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.5"/>
+<text x="880" y="147" font-size="21" fill="#1764d6" font-weight="650" text-anchor="start">Commit</text>
+<text x="880" y="176" font-size="11" fill="#142b3a" font-weight="400" text-anchor="start">Retire in order</text>
+<rect x="300" y="305" width="340" height="130" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.5"/>
+<text x="320" y="339" font-size="22" fill="#1764d6" font-weight="650" text-anchor="start">Accelerator dispatch</text>
+<text x="320" y="369" font-size="15" fill="#142b3a" font-weight="400" text-anchor="start">Wait for retirement slot 0</text>
+<text x="320" y="395" font-size="15" fill="#142b3a" font-weight="400" text-anchor="start">Send a tagged request; await its response</text>
+<rect x="698" y="305" width="312" height="130" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.5"/>
+<text x="718" y="339" font-size="22" fill="#1764d6" font-weight="650" text-anchor="start">Scalar execution</text>
+<text x="718" y="369" font-size="15" fill="#142b3a" font-weight="400" text-anchor="start">Integer + floating-point operations</text>
+<text x="718" y="395" font-size="13" fill="#142b3a" font-weight="400" text-anchor="start">Scalar loads / stores through cache + AXI</text>
+<path d="M596 222 V262 H470 V299" fill="none" stroke="#1764d6" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M763 222 V299" fill="none" stroke="#1764d6" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="454" y="281" font-size="12" fill="#536979" font-weight="400" text-anchor="end">vector / matrix</text>
+<text x="779" y="273" font-size="12" fill="#536979" font-weight="400" text-anchor="start">scalar</text>
+<rect x="300" y="540" width="340" height="96" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.5"/>
+<text x="320" y="573" font-size="22" fill="#087e8b" font-weight="650" text-anchor="start">RVV 1.0 / INT8 matrix</text>
+<text x="320" y="603" font-size="15" fill="#142b3a" font-weight="400" text-anchor="start">One destination selected by the router</text>
+<path d="M410 441 V534" fill="none" stroke="#1764d6" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M530 534 V441" fill="none" stroke="#087e8b" stroke-width="2" stroke-linejoin="round" marker-end="url(#response)"/>
+<text x="394" y="489" font-size="13" fill="#1764d6" font-weight="400" text-anchor="end">request</text>
+<text x="546" y="483" font-size="13" fill="#087e8b" font-weight="400" text-anchor="start">response</text>
+<text x="546" y="504" font-size="11" fill="#536979" font-weight="400" text-anchor="start">result + original tag</text>
+<text x="698" y="494" font-size="15" fill="#142b3a" font-weight="650" text-anchor="start">Matrix commands are serialized.</text>
+<text x="698" y="520" font-size="14" fill="#142b3a" font-weight="400" text-anchor="start">Younger issue waits for completion.</text>
+<text x="30" y="672" font-size="14" fill="#536979" font-weight="400" text-anchor="start">Conceptual dataflow. Execution has variable latency; retirement remains in order.</text>
+<line x1="30" y1="695" x2="1010" y2="695" stroke="#dbe4ea"/>
+<text x="30" y="720" font-size="12" fill="#536979" font-weight="400" text-anchor="start">Cerebral Chips · Proton NPU</text>
+<text x="520" y="720" font-size="12" fill="#536979" text-anchor="middle">Every machine should think.</text>
+<a href="https://www.cerebralchips.com">
+<text x="1010" y="720" font-size="12" fill="#536979" font-weight="400" text-anchor="end">cerebralchips.com</text>
+</a></g></svg>

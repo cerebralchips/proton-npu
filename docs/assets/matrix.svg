@@ -1,18 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 808" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 852" role="img" aria-labelledby="title desc">
 <title id="title">Matrix PE mesh and dataflow</title>
 <desc id="desc">Four rows and four columns of packed dot-product PEs. Each row handles four K elements. A moves horizontally, B weights remain at each PE, partial sums move vertically, and the controller collects the sixteen C results.</desc>
 <defs>
-<marker id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<marker markerUnits="userSpaceOnUse" id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
 <path d="M0,0 L8,4 L0,8" fill="#1764d6"/>
 </marker>
-<marker id="teal" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<marker markerUnits="userSpaceOnUse" id="teal" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
 <path d="M0,0 L8,4 L0,8" fill="#087e8b"/>
 </marker>
-<marker id="amber" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<marker markerUnits="userSpaceOnUse" id="amber" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
 <path d="M0,0 L8,4 L0,8" fill="#ab6000"/>
 </marker>
 </defs>
-<rect width="900" height="808" fill="white"/>
+<rect width="900" height="852" fill="white"/>
 <g font-family="system-ui,-apple-system,Segoe UI,sans-serif" fill="#142b3a">
 <rect x="45" y="25" width="405" height="87" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
 <text x="63" y="57" font-size="21" fill="#ab6000" font-weight="650">Command: mmacc</text>
@@ -112,5 +112,11 @@
 <text x="163" y="676" font-size="15" fill="#142b3a" font-weight="400">16 row-major INT32 results; CPU reads them through the AXI window</text>
 <text x="145" y="743" font-size="16" fill="#142b3a" font-weight="400">Blue: packed A travels right. Amber: partial sums travel down.</text>
 <text x="145" y="773" font-size="14" fill="#536979" font-weight="400">Each PE keeps a packed B weight. The controller skews inputs and advances the mesh ten times.</text>
+</g>
+<g font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12" fill="#536979">
+<line x1="30" y1="812" x2="870" y2="812" stroke="#dbe4ea"/>
+<text x="30" y="836">Cerebral Chips · Proton NPU</text>
+<text x="450" y="836" font-size="12" fill="#536979" text-anchor="middle">Every machine should think.</text>
+<a href="https://www.cerebralchips.com"><text x="870" y="836" text-anchor="end">cerebralchips.com</text></a>
 </g>
 </svg>

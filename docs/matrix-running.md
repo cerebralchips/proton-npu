@@ -81,3 +81,9 @@ does not qualify. Build/run operations are serialized by the VM file lock.
 No Linux services, matrix compiler fork, DMA or physical-design flow is required
 for this milestone. The tested contract and remaining limits are in
 [matrix-design.md](matrix-design.md).
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.

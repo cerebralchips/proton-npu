@@ -49,3 +49,9 @@ The final package reran the [unit gates](2026-10-04/matrix-unit.json) and
 [Publication checks and source hashes](2026-10-04/publication.json) record the
 setup checks and remaining limits; [browser checks](2026-10-04/browser-checks.json)
 cover all six pages at desktop/mobile widths and offline opening.
+
+---
+
+**[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
+
+Every machine should think.
