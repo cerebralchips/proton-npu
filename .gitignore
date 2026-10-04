@@ -1,0 +1,8 @@
+upstream/
+artifacts/
+.DS_Store
+__pycache__/
+*.pyc
+
+.tools/
+.venv/

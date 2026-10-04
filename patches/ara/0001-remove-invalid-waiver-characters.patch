@@ -1,0 +1,19 @@
+diff --git a/hardware/tb/verilator/waiver.vlt b/hardware/tb/verilator/waiver.vlt
+index cfc98ac..e37a34c 100644
+--- a/hardware/tb/verilator/waiver.vlt
++++ b/hardware/tb/verilator/waiver.vlt
+@@ -6,10 +6,10 @@
+ 
+ // Hierarchical verilation
+ hier_block -module "lane"
+-￼
+-￼// Hierarchical modules will be renamed by Verilator. Disable the DECLFILENAME
+-￼// check for those right away
+-￼lint_off -rule DECLFILENAME -file "*" -match "*lane*"
++
++// Hierarchical modules will be renamed by Verilator. Disable the DECLFILENAME
++// check for those right away
++lint_off -rule DECLFILENAME -file "*" -match "*lane*"
+ 
+ // Ignore duplicate modules, since this is handled by Bender
+ lint_off -rule MODDUP

@@ -1,0 +1,241 @@
+--- a/hardware/Makefile
++++ b/hardware/Makefile
+@@ -107,9 +107,15 @@
+ # Bender
+ # Defines
+ bender_defs += --define NR_LANES=$(nr_lanes) --define VLEN=$(vlen) --define ARIANE_ACCELERATOR_PORT=1
++ifeq ($(matrix),1)
++bender_defs += --define MATRIX_ENABLE=1
++endif
+ bender_defs_veril := $(bender_defs) --define COMMON_CELLS_ASSERTS_OFF
+ # Targets
+ bender_common_targs := -t rtl -t cv64a6_imafdcv_sv39 -t tech_cells_generic_include_tc_sram -t tech_cells_generic_include_tc_clk -t exclude_first_pass_decoder
++ifeq ($(matrix),1)
++bender_common_targs += -t matrix
++endif
+ bender_targs_simc     := $(bender_common_targs) -t ara_test -t cva6_test
+ bender_targs_veril    := $(bender_common_targs) -t ara_test -t cva6_test -t verilator  -t tech_cells_generic_exclude_deprecated
+ bender_targs_spyglass := $(bender_common_targs) -t spyglass
+--- a/Bender.yml
++++ b/Bender.yml
+@@ -28,6 +28,16 @@
+     # Packages
+     - hardware/include/rvv_pkg.sv
+     - hardware/include/ara_pkg.sv
++
++    - target: matrix
++      files:
++        - hardware/src/matrix/quadrilatero_pkg.sv
++        - hardware/src/matrix/vendor/quadrilatero/quadrilatero_mac_int.sv
++        - hardware/src/matrix/vendor/quadrilatero/quadrilatero_pe.sv
++        - hardware/src/matrix/vendor/quadrilatero/quadrilatero_mesh.sv
++        - hardware/src/matrix/matrix_tile.sv
++        - hardware/src/matrix/matrix_axi_lite.sv
++        - hardware/src/matrix/matrix_router.sv
+ 
+     # Sources
+     # Level 0
+--- a/hardware/src/cva6_accel_first_pass_decoder.sv
++++ b/hardware/src/cva6_accel_first_pass_decoder.sv
+@@ -20,6 +20,7 @@
+     output logic              is_control_flow_instr_o
+   );
+ 
++  logic        is_matrix;
+   logic        is_rs1;
+   logic        is_rs2;
+   logic        is_rd;
+@@ -44,6 +45,7 @@
+   always_comb begin
+     // Default values
+     is_accel_o = 1'b0;
++    is_matrix = 1'b0;
+     is_rs1   = 1'b0;
+     is_rs2   = 1'b0;
+     is_rd    = 1'b0;
+@@ -57,6 +59,14 @@
+     // Decode based on the opcode
+     case (instr.i_type.opcode)
+ 
++`ifdef MATRIX_ENABLE
++      7'h2b: begin
++        // custom-1: no scalar sources, funct3=0, funct7 0=mzero / 1=mmacc.
++        is_matrix = instruction_i[24:12] == 13'b0 && instruction_i[31:26] == 6'b0;
++        is_accel_o = is_matrix;
++        is_rd = is_matrix;
++      end
++`endif
+       // Arithmetic vector operations
+       riscv::OpcodeVec: begin
+         is_accel_o = 1'b1;
+@@ -135,7 +145,7 @@
+     instruction_o   = '0;
+     illegal_instr_o = 1'b1;
+ 
+-    if (is_accel_o && vs_i != riscv::Off) begin // trigger illegal instruction if the vector extension is turned off
++    if (is_accel_o && (is_matrix || vs_i != riscv::Off)) begin // trigger illegal instruction if the vector extension is turned off
+       // TODO: Instruction going to other accelerators might need to distinguish whether the value of vs_i is needed or not.
+       // Send accelerator instructions to the coprocessor
+       instruction_o.fu  = ACCEL;
+@@ -153,6 +163,10 @@
+         5'b00000: instruction_o.op = ACCEL_OP;
+       endcase
+ 
++`ifdef MATRIX_ENABLE
++      if (is_matrix) instruction_o.op = ACCEL_OP_MATRIX;
++`endif
++
+       // Check that mstatus.FS is not OFF if we have a FP instruction for the accelerator
+       illegal_instr_o = (is_vfp && (fs_i == riscv::Off)) ? 1'b1 : 1'b0;
+ 
+--- a/hardware/src/ara.sv
++++ b/hardware/src/ara.sv
+@@ -54,6 +54,9 @@
+     input  logic              scan_data_i,
+     output logic              scan_data_o,
+ 
++`ifdef MATRIX_ENABLE
++    output logic matrix_idle_o,
++`endif
+     // Interface with Ariane
+     input  cva6_to_acc_t      acc_req_i,
+     output acc_to_cva6_t      acc_resp_o,
+@@ -189,6 +192,9 @@
+   logic                         load_complete;
+   logic                         store_complete;
+   logic                         store_pending;
++`ifdef MATRIX_ENABLE
++  assign matrix_idle_o = ara_idle && !ara_req_valid && !store_pending;
++`endif
+   // Interface with the lanes
+   logic      [NrLanes-1:0][4:0] fflags_ex;
+   logic      [NrLanes-1:0]      fflags_ex_valid;
+--- a/hardware/src/ara_system.sv
++++ b/hardware/src/ara_system.sv
+@@ -63,6 +63,10 @@
+     input  logic                    scan_enable_i,
+     input  logic                    scan_data_i,
+     output logic                    scan_data_o,
++`ifdef MATRIX_ENABLE
++    output logic matrix_cmd_valid_o, matrix_cmd_macc_o,
++    input logic matrix_cmd_ready_i, matrix_done_i,
++`endif
+     // AXI Interface
+     output system_axi_req_t         axi_req_o,
+     input  system_axi_resp_t        axi_resp_i
+@@ -94,6 +98,18 @@
+   logic                                 inval_valid;
+   logic                                 inval_ready;
+ 
++`ifdef MATRIX_ENABLE
++  cva6_to_acc_t ara_acc_req;
++  acc_to_cva6_t ara_acc_resp;
++  logic ara_matrix_idle;
++  matrix_router #(.cpu_req_t(cva6_to_acc_t), .cpu_resp_t(acc_to_cva6_t),
++    .TransIdWidth(CVA6Cfg.TRANS_ID_BITS)) i_matrix_router (
++    .clk_i, .rst_ni, .cpu_req_i(acc_req), .cpu_resp_o(acc_resp),
++    .ara_req_o(ara_acc_req), .ara_resp_i(ara_acc_resp), .ara_idle_i(ara_matrix_idle),
++    .cmd_valid_o(matrix_cmd_valid_o), .cmd_macc_o(matrix_cmd_macc_o),
++    .cmd_ready_i(matrix_cmd_ready_i), .done_i(matrix_done_i)
++  );
++`endif
+   // Support max 8 cores, for now
+   logic [63:0] hart_id;
+   assign hart_id = {'0, hart_id_i};
+@@ -251,8 +267,14 @@
+     .scan_enable_i   (scan_enable_i ),
+     .scan_data_i     (1'b0          ),
+     .scan_data_o     (/* Unused */  ),
++`ifdef MATRIX_ENABLE
++    .matrix_idle_o   (ara_matrix_idle),
++    .acc_req_i       (ara_acc_req   ),
++    .acc_resp_o      (ara_acc_resp  ),
++`else
+     .acc_req_i       (acc_req       ),
+     .acc_resp_o      (acc_resp      ),
++`endif
+     .axi_req_o       (ara_axi_req   ),
+     .axi_resp_i      (ara_axi_resp  )
+   );
+--- a/hardware/src/ara_soc.sv
++++ b/hardware/src/ara_soc.sv
+@@ -69,9 +69,19 @@
+   typedef enum int unsigned {
+     L2MEM = 0,
+     UART  = 1,
++`ifdef MATRIX_ENABLE
++    MATRIX = 3,
++`endif
+     CTRL  = 2
+   } axi_slaves_e;
++`ifdef MATRIX_ENABLE
++  localparam NrAXISlaves = MATRIX + 1;
++  localparam logic [63:0] MatrixBase = 64'hE0000000;
++  localparam logic [63:0] MatrixLength = 64'h1000;
++  logic matrix_cmd_valid, matrix_cmd_macc, matrix_cmd_ready, matrix_done;
++`else
+   localparam NrAXISlaves = CTRL + 1;
++`endif
+ 
+   // Memory Map
+   // 1GByte of DDR (split between two chips on Genesys2)
+@@ -150,6 +160,9 @@
+ 
+   axi_pkg::xbar_rule_64_t [NrAXISlaves-1:0] routing_rules;
+   assign routing_rules = '{
++`ifdef MATRIX_ENABLE
++    '{idx: MATRIX, start_addr: MatrixBase, end_addr: MatrixBase + MatrixLength},
++`endif
+     '{idx: CTRL, start_addr: CTRLBase, end_addr: CTRLBase + CTRLLength},
+     '{idx: UART, start_addr: UARTBase, end_addr: UARTBase + UARTLength},
+     '{idx: L2MEM, start_addr: DRAMBase, end_addr: DRAMBase + DRAMLength}
+@@ -439,6 +452,26 @@
+     .mst_resp_i(periph_narrow_axi_resp[CTRL])
+   );
+ 
++`ifdef MATRIX_ENABLE
++  soc_narrow_lite_req_t matrix_lite_req;
++  soc_narrow_lite_resp_t matrix_lite_resp;
++  initial if (AxiDataWidth != 64) $fatal(1, "Matrix v1 requires the two-lane 64-bit AXI configuration");
++  axi_to_axi_lite #(
++    .AxiAddrWidth(AxiAddrWidth), .AxiDataWidth(64), .AxiIdWidth(AxiSocIdWidth),
++    .AxiUserWidth(AxiUserWidth), .AxiMaxReadTxns(1), .AxiMaxWriteTxns(1),
++    .FallThrough(1'b0), .full_req_t(soc_wide_req_t), .full_resp_t(soc_wide_resp_t),
++    .lite_req_t(soc_narrow_lite_req_t), .lite_resp_t(soc_narrow_lite_resp_t)
++  ) i_matrix_axi_bridge (
++    .clk_i, .rst_ni, .test_i(1'b0), .slv_req_i(periph_wide_axi_req[MATRIX]),
++    .slv_resp_o(periph_wide_axi_resp[MATRIX]), .mst_req_o(matrix_lite_req),
++    .mst_resp_i(matrix_lite_resp)
++  );
++  matrix_axi_lite #(.req_t(soc_narrow_lite_req_t), .resp_t(soc_narrow_lite_resp_t)) i_matrix (
++    .clk_i, .rst_ni, .req_i(matrix_lite_req), .resp_o(matrix_lite_resp),
++    .cmd_valid_i(matrix_cmd_valid), .cmd_macc_i(matrix_cmd_macc),
++    .cmd_ready_o(matrix_cmd_ready), .done_o(matrix_done)
++  );
++`endif
+   //////////////
+   //  System  //
+   //////////////
+@@ -464,6 +497,11 @@
+     cfg.NrNonIdempotentRules  = 2;
+     cfg.NonIdempotentAddrBase = {UARTBase, CTRLBase};
+     cfg.NonIdempotentLength   = {UARTLength, CTRLLength};
++`ifdef MATRIX_ENABLE
++    cfg.NrNonIdempotentRules = 3;
++    cfg.NonIdempotentAddrBase = {UARTBase, CTRLBase, MatrixBase};
++    cfg.NonIdempotentLength = {UARTLength, CTRLLength, MatrixLength};
++`endif
+     cfg.NrExecuteRegionRules  = 3;
+     //                          DRAM;       Boot ROM;   Debug Module
+     cfg.ExecuteRegionAddrBase = {DRAMBase,   64'h1_0000, 64'h0};
+@@ -542,6 +580,10 @@
+   i_system (
+     .clk_i        (clk_i                    ),
+     .rst_ni       (rst_ni                   ),
++`ifdef MATRIX_ENABLE
++    .matrix_cmd_valid_o(matrix_cmd_valid), .matrix_cmd_macc_o(matrix_cmd_macc),
++    .matrix_cmd_ready_i(matrix_cmd_ready), .matrix_done_i(matrix_done),
++`endif
+     .boot_addr_i  (DRAMBase                 ), // start fetching from DRAM
+     .hart_id_i    (hart_id                  ),
+     .scan_enable_i(1'b0                     ),

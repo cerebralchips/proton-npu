@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 725" role="img" aria-labelledby="title desc">
+<title id="title">Proton NPU system architecture</title>
+<desc id="desc">One ELF runs on CVA6. A command router directs RVV requests to Ara and custom matrix requests to the INT8 engine. CVA6 and Ara access shared RAM through AXI; CPU scalar accesses load and read the matrix tile buffers.</desc>
+<defs>
+<marker id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<path d="M0,0 L8,4 L0,8" fill="#1764d6"/>
+</marker>
+<marker id="teal" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<path d="M0,0 L8,4 L0,8" fill="#087e8b"/>
+</marker>
+<marker id="amber" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<path d="M0,0 L8,4 L0,8" fill="#ab6000"/>
+</marker>
+</defs>
+<rect width="1000" height="725" fill="white"/>
+<g font-family="system-ui,-apple-system,Segoe UI,sans-serif" fill="#142b3a">
+<rect x="40" y="25" width="265" height="86" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="58" y="57" font-size="21" fill="#1764d6" font-weight="650">One RISC-V ELF</text>
+<text x="58" y="86" font-size="15" fill="#142b3a" font-weight="400">Scalar + RVV + custom matrix</text>
+<rect x="40" y="175" width="265" height="188" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="58" y="207" font-size="21" fill="#1764d6" font-weight="650">CVA6 · main CPU</text>
+<text x="58" y="236" font-size="15" fill="#142b3a" font-weight="400">1 × RV64 application core</text>
+<text x="58" y="259" font-size="15" fill="#142b3a" font-weight="400">Six-stage, in-order pipeline</text>
+<text x="58" y="282" font-size="15" fill="#142b3a" font-weight="400">Scalar register file + caches</text>
+<text x="58" y="305" font-size="15" fill="#142b3a" font-weight="400">Fetch / decode / retire</text>
+<rect x="355" y="190" width="225" height="115" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="373" y="222" font-size="21" fill="#1764d6" font-weight="650">Command router</text>
+<text x="373" y="251" font-size="15" fill="#142b3a" font-weight="400">RVV → Ara</text>
+<text x="373" y="274" font-size="15" fill="#142b3a" font-weight="400">mzero / mmacc → matrix</text>
+<rect x="640" y="155" width="320" height="150" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
+<text x="658" y="187" font-size="21" fill="#087e8b" font-weight="650">Ara · RVV unit</text>
+<text x="658" y="216" font-size="15" fill="#142b3a" font-weight="400">2 vector lanes</text>
+<text x="658" y="239" font-size="15" fill="#142b3a" font-weight="400">32 × 2,048-bit vector registers</text>
+<text x="658" y="262" font-size="15" fill="#142b3a" font-weight="400">Vector ALU / FPU / load-store</text>
+<rect x="640" y="380" width="320" height="167" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="658" y="412" font-size="21" fill="#ab6000" font-weight="650">Matrix · INT8 unit</text>
+<text x="658" y="441" font-size="15" fill="#142b3a" font-weight="400">4 × 4 PEs, 4 products per PE</text>
+<text x="658" y="464" font-size="15" fill="#142b3a" font-weight="400">A / BT / C local tile buffers</text>
+<text x="658" y="487" font-size="15" fill="#142b3a" font-weight="400">INT32 accumulate + output</text>
+<text x="658" y="510" font-size="15" fill="#142b3a" font-weight="400">AXI target; no DMA master</text>
+<rect x="40" y="465" width="510" height="80" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
+<text x="58" y="497" font-size="21" fill="#087e8b" font-weight="650">64-bit AXI interconnect</text>
+<text x="58" y="526" font-size="15" fill="#142b3a" font-weight="400">Scalar traffic + Ara vector memory traffic</text>
+<rect x="40" y="615" width="245" height="80" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
+<text x="58" y="647" font-size="21" fill="#087e8b" font-weight="650">Simulated RAM</text>
+<text x="58" y="676" font-size="15" fill="#142b3a" font-weight="400">Programs + shared buffers</text>
+<rect x="315" y="615" width="235" height="80" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
+<text x="333" y="647" font-size="21" fill="#087e8b" font-weight="650">Control + UART</text>
+<text x="333" y="676" font-size="15" fill="#142b3a" font-weight="400">Exit status + console</text>
+<path d="M172 111 V175" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<text x="188" y="146" font-size="14" fill="#1764d6" font-weight="400">instructions</text>
+<path d="M305 230 H355" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)" marker-start="url(#blue)"/>
+<path d="M580 220 H640" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)" marker-start="url(#blue)"/>
+<path d="M580 275 H610 V420 H640" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)" marker-start="url(#amber)" stroke-dasharray="7 5"/>
+<path d="M170 363 V465" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
+<text x="185" y="413" font-size="14" fill="#087e8b" font-weight="400">scalar loads / stores</text>
+<path d="M825 305 V345 H515 V465" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
+<text x="626" y="337" font-size="14" fill="#087e8b" font-weight="400">Ara AXI master</text>
+<path d="M550 502 H640" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
+<text x="565" y="490" font-size="13" fill="#087e8b" font-weight="400">MMIO</text>
+<path d="M167 545 V615" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
+<path d="M430 545 V615" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
+<text x="640" y="605" font-size="15" fill="#1764d6" font-weight="600">Control path</text>
+<text x="640" y="632" font-size="15" fill="#087e8b" font-weight="600">Memory path</text>
+<text x="640" y="670" font-size="13" fill="#536979" font-weight="400">Crossing lines do not imply a junction.</text>
+</g>
+</svg>

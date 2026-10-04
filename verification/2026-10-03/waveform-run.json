@@ -1,0 +1,148 @@
+{
+  "result": "PASS",
+  "application": "scalar_vector_matrix",
+  "configuration": "2_lanes + MATRIX_ENABLE",
+  "sources": {
+    "ara": {
+      "url": "https://github.com/pulp-platform/ara.git",
+      "commit": "34bd3bc152421b4601a7bf3d6e8e91ffb545c99e"
+    },
+    "cva6": {
+      "url": "https://github.com/pulp-platform/cva6.git",
+      "commit": "99eac9a649001bdf5b8f9da52e0ca73d5c48db1c"
+    },
+    "configuration": "2_lanes",
+    "lanes": 2,
+    "vlen_bits": 2048,
+    "llvm": {
+      "version": "20.1.0",
+      "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.0/LLVM-20.1.0-Linux-ARM64.tar.xz",
+      "sha256": "9d1bbf3f6d4d011e3b8b4b585f686bc968474917f37d3b82b4a534f456168c67"
+    },
+    "bender": {
+      "version": "0.31.0",
+      "url": "https://github.com/pulp-platform/bender/releases/download/v0.31.0/bender-0.31.0-arm64-linux-gnu-ubuntu24.04.tar.gz",
+      "sha256": "117af7701628db067fb3b4c34b5ab0bcead77102ef378aacbb8e8bf4887131bf"
+    },
+    "verilator": {
+      "commit": "06263ec724e7bf1fb0a0366b3aec54cd431c51d6"
+    },
+    "spike": {
+      "commit": "204b88deda9bcb7537bc09ae5c320f691e8839ef"
+    },
+    "c_runtime": {
+      "provider": "existing CVA6 lab GCC 13.1.0 / Newlib 4.3.0 installation",
+      "guest_relative_path": ".local/share/cva6-lab/gcc-13.1.0",
+      "usage": "read-only sysroot and libgcc for LLVM; recorded deviation from Ara's source-built Newlib/compiler-rt recipe"
+    },
+    "matrix": {
+      "configuration": "2_lanes + MATRIX_ENABLE",
+      "quadrilatero": {
+        "url": "https://github.com/pulp-platform/quadrilatero.git",
+        "commit": "4e4f41520d0784ecb750a22d0715d5a22cca8e26",
+        "license": "Apache-2.0 WITH SHL-2.1"
+      },
+      "mesh": [
+        4,
+        4
+      ],
+      "packed_int8_products_per_pe": 4,
+      "tile_k": 16,
+      "mmio_base": "0xe0000000",
+      "custom_opcode": "0x2b (custom-1)"
+    }
+  },
+  "rtl_sha256": {
+    "hardware/matrix/quadrilatero_pkg.sv": "91f854c1c654a4307e09fc6efe6ef478c8f892ad605898fae36d51f8f1c9048e",
+    "hardware/matrix/vendor/quadrilatero/quadrilatero_mac_int.sv": "bc2d562ddba741f14bf2c0d6044093eea77e7fc637d9f291b87309bc644bae54",
+    "hardware/matrix/vendor/quadrilatero/quadrilatero_pe.sv": "44db573fc3ad83d4b34c1fdddfcbc4ce2119c4d134c4af5041d8ff579fa25d30",
+    "hardware/matrix/vendor/quadrilatero/quadrilatero_mesh.sv": "dfb0d3d7b302360bad8a320a4b6fd561e6eb3ce036724cb5ba1c30143bbf6d69",
+    "hardware/matrix/matrix_tile.sv": "1d12a380d180782a0b57244e96f7712f87717c668a83f680b28c9b250d01cb70",
+    "hardware/matrix/matrix_axi_lite.sv": "8fdce704e968df66b2687d4a339ae75c7a9cd74f2cd787a73893aa4822f7b871",
+    "hardware/matrix/matrix_router.sv": "c64ed5e6078ecb09e750f7881fbcac99c55523c3217df88ca435f035b12be133"
+  },
+  "patch_sha256": {
+    "patches/ara/0004-track-testbench-build-inputs.patch": "17442599ba6a4a00d544354774f63f93ff32b0508ad616371a5e0dc46c03e2aa",
+    "patches/ara/0001-remove-invalid-waiver-characters.patch": "3df3618caab9adc59f8da4799784bd88e552d4042b15d9c0438e8a40f02c4aa3",
+    "patches/ara/0005-matrix-integration.patch": "e6570acc91f3520c5beb631d8040c484be18ef02b9e450bfffc6ba3db69eca54",
+    "patches/ara/0003-decimal-cycle-statistics.patch": "11c8ae9e512f7183b33b00fb285c8bd08a02ed47ac32258146f2c504fba9bb09",
+    "patches/ara/0002-spike-linker-sections.patch": "70211a0248c2bc0aa9c6c77e50887aafe828b96bfa33129b1c83b2d1338b1bf1",
+    "patches/cva6/0001-matrix-serialization.patch": "63e44196b35bf85790fdb022b20407bad191709741d8ef5c17aab1eb0944e5be"
+  },
+  "elf_sha256": "d1564da85d2201b79bd864a4cda4048b0d572fc09950e0508c840470c3a83bc3",
+  "simulator_sha256": "ec3b5c2ac57cb5172f488efca49c491f56a1b1260cd1ed285706a094d8c30a1f",
+  "rtl_cycles": 115650,
+  "execution": {
+    "cases": [
+      [
+        0,
+        4,
+        4,
+        4,
+        44
+      ],
+      [
+        1,
+        8,
+        8,
+        8,
+        4294861612
+      ],
+      [
+        2,
+        4,
+        4,
+        16,
+        4294923247
+      ],
+      [
+        3,
+        5,
+        7,
+        19,
+        86497
+      ],
+      [
+        4,
+        3,
+        2,
+        0,
+        18
+      ],
+      [
+        5,
+        1,
+        1,
+        1,
+        4294961443
+      ],
+      [
+        6,
+        9,
+        5,
+        33,
+        4294963102
+      ],
+      [
+        7,
+        4,
+        4,
+        16,
+        4194352
+      ]
+    ],
+    "retired_instructions": {
+      "scalar": 69007,
+      "vector": 64,
+      "mzero": 52,
+      "mmacc": 34
+    },
+    "matrix_zero": 52,
+    "matrix_macc": 34,
+    "matched_issue_done_response": 86,
+    "oracle": "Python integer matmul + scalar C per-element checks",
+    "instruction_trace": "instructions.csv",
+    "events": "matrix-events.csv"
+  },
+  "waveform": "sim.fst"
+}

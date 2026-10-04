@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 505" role="img" aria-labelledby="title desc">
+<title id="title">CVA6 pipeline and accelerator dispatch</title>
+<desc id="desc">Conceptual six-stage pipeline: PC generation, fetch, decode, issue, execute and commit. Scalar instructions use scalar execution units. Accelerator instructions use a tagged non-speculative dispatch path.</desc>
+<defs>
+<marker id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<path d="M0,0 L8,4 L0,8" fill="#1764d6"/>
+</marker>
+<marker id="teal" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<path d="M0,0 L8,4 L0,8" fill="#087e8b"/>
+</marker>
+<marker id="amber" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<path d="M0,0 L8,4 L0,8" fill="#ab6000"/>
+</marker>
+</defs>
+<rect width="1000" height="505" fill="white"/>
+<g font-family="system-ui,-apple-system,Segoe UI,sans-serif" fill="#142b3a">
+<text x="30" y="35" font-size="23" fill="#1764d6" font-weight="650">CVA6: one architectural instruction stream</text>
+<rect x="30" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="48" y="112" font-size="21" fill="#1764d6" font-weight="650">PC gen</text>
+<text x="42" y="137" font-size="11" fill="#142b3a" font-weight="400">Select next PC</text>
+<path d="M172 116 H187" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<rect x="187" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="205" y="112" font-size="21" fill="#1764d6" font-weight="650">Fetch</text>
+<text x="199" y="137" font-size="11" fill="#142b3a" font-weight="400">Instruction cache</text>
+<path d="M329 116 H344" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<rect x="344" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="362" y="112" font-size="21" fill="#1764d6" font-weight="650">Decode</text>
+<text x="356" y="137" font-size="11" fill="#142b3a" font-weight="400">Recognize operation</text>
+<path d="M486 116 H501" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<rect x="501" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="519" y="112" font-size="21" fill="#1764d6" font-weight="650">Issue</text>
+<text x="513" y="137" font-size="11" fill="#142b3a" font-weight="400">Read operands</text>
+<path d="M643 116 H658" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<rect x="658" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="676" y="112" font-size="21" fill="#1764d6" font-weight="650">Execute</text>
+<text x="670" y="137" font-size="11" fill="#142b3a" font-weight="400">ALU / FPU / LSU</text>
+<path d="M800 116 H815" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<rect x="815" y="80" width="142" height="110" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="833" y="112" font-size="21" fill="#1764d6" font-weight="650">Commit</text>
+<text x="827" y="137" font-size="11" fill="#142b3a" font-weight="400">Retire in order</text>
+<rect x="75" y="275" width="240" height="112" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="93" y="307" font-size="21" fill="#1764d6" font-weight="650">Scalar execution</text>
+<text x="93" y="336" font-size="15" fill="#142b3a" font-weight="400">Integer + FP registers</text>
+<text x="93" y="359" font-size="15" fill="#142b3a" font-weight="400">Scalar arithmetic / memory</text>
+<rect x="375" y="275" width="255" height="112" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
+<text x="393" y="307" font-size="21" fill="#1764d6" font-weight="650">Accelerator dispatch</text>
+<text x="393" y="336" font-size="15" fill="#142b3a" font-weight="400">Wait for retirement slot 0</text>
+<text x="393" y="359" font-size="15" fill="#142b3a" font-weight="400">Tag request; await response</text>
+<rect x="700" y="275" width="245" height="112" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
+<text x="718" y="307" font-size="21" fill="#087e8b" font-weight="650">Ara / matrix</text>
+<text x="718" y="336" font-size="15" fill="#142b3a" font-weight="400">One selected destination</text>
+<text x="718" y="359" font-size="15" fill="#142b3a" font-weight="400">Result + original tag</text>
+<path d="M572 190 V245 H502 V275" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M729 190 V230 H195 V275" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M630 330 H700" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)" marker-start="url(#blue)"/>
+<text x="75" y="438" font-size="17" fill="#142b3a" font-weight="600">Matrix serialization blocks younger issue until completion.</text>
+<text x="75" y="468" font-size="14" fill="#536979" font-weight="400">Conceptual six-stage view. Stage names summarize the CVA6 flow; accelerator execution has variable latency.</text>
+</g>
+</svg>

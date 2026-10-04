@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="The CPU that executes the program, controls scalar memory accesses, and coordinates vector and matrix work.">
+<title>CVA6: the scalar core · Cerebral Chips</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top">
+<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><span class="org">Cerebral Chips<br>Hardware engineering</span>
+</div>
+</header>
+<div class="layout">
+<aside class="side">
+<div class="nav-label">Architecture guide</div>
+<nav aria-label="Documentation"><a href="index.html">Proton NPU</a><a href="cva6.html" aria-current="page">CVA6 · scalar</a><a href="ara.html">Ara · vector</a><a href="matrix.html">Matrix · INT8</a><a href="contributing.html">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
+</nav>
+<div class="secondary">
+<div class="nav-label">Project</div>
+<nav aria-label="Project resources"><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
+</nav>
+</div><small>Initial hardware milestone<br>RV64 · RVV · INT8 matrix<br>Documentation: 4 October 2026</small>
+</aside>
+<main id="main">
+<header class="hero">
+<div class="eyebrow">Block 01 / instruction ownership</div>
+<h1>CVA6: the scalar core</h1>
+<p class="lead">The CPU that executes the program, controls scalar memory accesses, and coordinates vector and matrix work.</p>
+<div class="tags"><span class="tag">1 core</span><span class="tag">RV64</span><span class="tag">Six-stage pipeline</span>
+</div>
+</header>
+<h2>The main processor</h2>
+<p>CVA6 owns the program counter, scalar registers, control flow, exceptions and retirement. Ara and the matrix engine receive instructions from this CPU; neither runs a second software program.</p>
+<figure class="figure"><a href="assets/cva6.svg" aria-label="Open CVA6 scalar pipeline and tagged accelerator dispatch at full size"><img src="assets/cva6.svg" alt="CVA6 scalar pipeline and tagged accelerator dispatch"></a>
+<figcaption>A conceptual pipeline view. Accelerator completion can take multiple cycles; the first version deliberately serializes matrix commands. <a href="assets/cva6.svg">Open full-size diagram ↗</a>
+</figcaption>
+</figure>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th scope="col">Property</th><th scope="col">Current implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Core count / word size</td><td>One core, 64-bit scalar registers</td>
+</tr>
+<tr><td>Pipeline</td><td>Six stages; single issue; in-order retirement</td>
+</tr>
+<tr><td>Scalar execution</td><td>Integer arithmetic and scalar floating point</td>
+</tr>
+<tr><td>L1 caches</td><td>4 KiB instruction cache; 8 KiB data cache</td>
+</tr>
+<tr><td>Instruction interface</td><td>Existing Ara-specific accelerator request/response interface</td>
+</tr>
+<tr><td>Matrix opcodes</td><td>Custom-1, opcode 0x2B; mzero / mmacc</td>
+</tr>
+<tr><td>Command ordering</td><td>Accelerator dispatch waits for retirement slot 0; younger issue waits for matrix completion</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>Why the ordering rules matter</h2>
+<p>A fence can flush and refetch younger instructions. Issuing a matrix command before that fence retires could execute the same accumulation twice. Our integration waits until the command is at the first retirement slot, and carries its transaction ID through completion.</p>
+<p>Vector memory bookkeeping counts accepted requests—valid <em>and</em> ready—so bus backpressure cannot accidentally count one request several times. The original matrix-disabled configuration remains available.</p>
+<h2>Where to read the code</h2>
+<div class="source-links"><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/patches/cva6/0001-matrix-serialization.patch">CPU integration patch ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/patches/ara/0005-matrix-integration.patch">Decoder and SoC integration ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/hardware/matrix/matrix_router.sv">Command router ↗</a>
+</div>
+<p class="small">The CVA6 implementation is downloaded at the revision in sources.lock.json. The first push contains our reviewable integration patches rather than a second copy of the entire upstream processor.</p>
+<footer class="footer"><span>Cerebral Chips · Proton NPU<br>Source-backed architecture notes.</span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/cva6.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
+</footer>
+</main>
+</div>
+</body>
+</html>

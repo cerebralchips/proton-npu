@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="An open hardware foundation for Cerebral Chips: one RISC-V CPU, two vector lanes, and an INT8 matrix engine working under one program.">
+<title>Proton NPU · Cerebral Chips</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top">
+<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><span class="org">Cerebral Chips<br>Hardware engineering</span>
+</div>
+</header>
+<div class="layout">
+<aside class="side">
+<div class="nav-label">Architecture guide</div>
+<nav aria-label="Documentation"><a href="index.html" aria-current="page">Proton NPU</a><a href="cva6.html">CVA6 · scalar</a><a href="ara.html">Ara · vector</a><a href="matrix.html">Matrix · INT8</a><a href="contributing.html">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
+</nav>
+<div class="secondary">
+<div class="nav-label">Project</div>
+<nav aria-label="Project resources"><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
+</nav>
+</div><small>Initial hardware milestone<br>RV64 · RVV · INT8 matrix<br>Documentation: 4 October 2026</small>
+</aside>
+<main id="main">
+<header class="hero">
+<div class="eyebrow">System architecture / milestone 01</div>
+<h1>Proton NPU</h1>
+<p class="lead">An open hardware foundation for Cerebral Chips: one RISC-V CPU, two vector lanes, and an INT8 matrix engine working under one program.</p>
+<div class="tags"><span class="tag">CVA6 + Ara</span><span class="tag">4 × 4 matrix mesh</span><span class="tag">Bare-metal RTL simulation</span>
+</div>
+</header>
+<div class="callout">
+<p><strong>Our first working hardware foundation.</strong> One bare-metal program executes scalar, vector and custom matrix instructions on real CVA6 + Ara + matrix RTL. “Proton NPU” is the project name; the current architecture is a single-core RISC-V system with attached vector and matrix execution units.</p>
+</div>
+<div class="facts">
+<div class="fact"><b>1</b><span>RV64 CPU core</span>
+</div>
+<div class="fact"><b>2</b><span>Ara vector lanes</span>
+</div>
+<div class="fact"><b>16</b><span>packed INT8 matrix PEs</span>
+</div>
+<div class="fact"><b>1 ELF</b><span>one architectural program</span>
+</div>
+</div>
+<h2>The complete system</h2>
+<figure class="figure"><a href="assets/system.svg" aria-label="Open System block diagram: CVA6, Ara, matrix and AXI at full size"><img src="assets/system.svg" alt="System block diagram: CVA6, Ara, matrix and AXI"></a>
+<figcaption>Blue routes instructions and completions. Teal carries memory traffic. The dashed amber path carries matrix commands. The matrix is an AXI target, not a memory-fetching DMA engine. <a href="assets/system.svg">Open full-size diagram ↗</a>
+</figcaption>
+</figure>
+<div class="cards">
+<article class="card"><span class="number">01</span>
+<h3>CVA6</h3>
+<p>Fetches instructions, executes scalar C and retires all instructions in order.</p><a href="cva6.html">Explore the block →</a>
+</article>
+<article class="card"><span class="number">02</span>
+<h3>Ara</h3>
+<p>Executes RVV operations across two lanes and accesses shared RAM through AXI.</p><a href="ara.html">Explore the block →</a>
+</article>
+<article class="card"><span class="number">03</span>
+<h3>Matrix</h3>
+<p>Computes signed INT8 tiled products using sixteen packed-dot-product PEs.</p><a href="matrix.html">Explore the block →</a>
+</article>
+</div>
+<h2>Follow one workload</h2>
+<ol class="steps">
+<li><strong>Scalar setup:</strong> CVA6 prepares dimensions and pointers in ordinary C.</li>
+<li><strong>Vector preparation:</strong> explicit RVV intrinsics generate input-processing instructions for Ara.</li>
+<li><strong>Matrix computation:</strong> the C library packs A and transposed B through scalar MMIO, then issues <code>mzero</code> and <code>mmacc</code>.</li>
+<li><strong>Vector finishing:</strong> results copied to RAM are processed by Ara.</li>
+<li><strong>Verification:</strong> scalar C compares every result with independently generated expectations; host tools reconcile instruction and hardware traces.</li>
+</ol>
+<h2>What is verified</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th scope="col">Property</th><th scope="col">Current implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>PE arithmetic</td><td>262,144 signed-byte / lane checks</td>
+</tr>
+<tr><td>Tile arithmetic</td><td>256 directed and randomized tile cases</td>
+</tr>
+<tr><td>Combined program</td><td>8 workloads; 115,650 simulated cycles</td>
+</tr>
+<tr><td>Execution evidence</td><td>69,007 scalar + 64 RVV + 52 mzero + 34 mmacc retired</td>
+</tr>
+<tr><td>Waveform arithmetic</td><td>All 86 matrix command results checked from actual RTL FST</td>
+</tr>
+<tr><td>Regression</td><td>9/9 scalar/vector tests with matrix on; 9/9 with matrix off</td>
+</tr>
+<tr><td>Failure handling</td><td>Injected wrong result and forced timeout rejected</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="small">This is a recorded functional milestone. A simulation cycle is not a measured chip clock frequency, and these tests do not establish full ISA conformance or application throughput. See the committed verification summary for source and artifact hashes.</p>
+<div class="source-links"><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/verification/README.md">Verification evidence ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/sources.lock.json">Pinned dependencies ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-design.md">Hardware/software contract ↗</a>
+</div>
+<h2>Start contributing</h2>
+<pre><code>git clone --branch hardware https://github.com/cerebralchips/proton-npu.git
+cd proton-npu
+./scripts/ara vm-start  # Apple Silicon
+./scripts/ara provision
+./scripts/ara doctor
+./scripts/ara matrix
+./scripts/ara matrix-wave</code>
+</pre>
+<p><a href="contributing.html">Contributor map and verification gates →</a>
+</p>
+<footer class="footer"><span>Cerebral Chips · Proton NPU<br>Source-backed architecture notes.</span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/index.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
+</footer>
+</main>
+</div>
+</body>
+</html>

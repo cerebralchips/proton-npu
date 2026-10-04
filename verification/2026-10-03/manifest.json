@@ -1,0 +1,57 @@
+{
+  "combined-elf.json": {
+    "source_artifact_id": "20261003T172527Z-matrix-run-scalar_vector_matrix-y00_mkrz",
+    "source_file": "result.json",
+    "source_sha256": "0a623f734930daf52a9a29ef3f76ca63de25e019d86d6a33f2782d2e017bb2a0"
+  },
+  "matrix-unit.json": {
+    "source_artifact_id": "20261003T172521Z-matrix-unit-ge5n5idb",
+    "source_file": "result.json",
+    "source_sha256": "afab89473d9753531aae4eebf70f79cd898b3f038c117615940f463dd51a8e39"
+  },
+  "waveform-run.json": {
+    "source_artifact_id": "20261003T171502Z-matrix-wave-9sccgczr",
+    "source_file": "result.json",
+    "source_sha256": "2e38d84f0c84697c9181ecf0981799085c07b1192d2e0f84a1f588c55094ce8b"
+  },
+  "waveform-tiles.json": {
+    "source_artifact_id": "20261003T171502Z-matrix-wave-9sccgczr",
+    "source_file": "matrix-wave-check.json",
+    "source_sha256": "c44b613c834da9c02484dc64ddf3ad02690b743d5046286eb4d7d8b4fd52de03"
+  },
+  "matrix-regression.json": {
+    "source_artifact_id": "20261003T171709Z-matrix-smoke-8xeyfqqt",
+    "source_file": "summary.json",
+    "source_sha256": "463afff6c686f9e73f4dfe89a2e0fbaae62ad431cccf29c9fa7126f3a5d26e51"
+  },
+  "baseline-regression.json": {
+    "source_artifact_id": "20261003T172310Z-smoke-dtkist2f",
+    "source_file": "summary.json",
+    "source_sha256": "ae9e866aa19c38189731d1fe31fccb1847ddfd33f0ae525e788ba0c1e6d355eb"
+  },
+  "negative-gates.json": {
+    "source_artifact_id": "20261003T171728Z-matrix-negative-c091kx_r",
+    "source_file": "result.json",
+    "source_sha256": "50e47a8fce834b37602686457108fe5f9d8db7c7cd4222b27d720648ee5815c8"
+  },
+  "patch-reproduction.json": {
+    "source_artifact_id": "matrix-patch-reproducibility.json",
+    "source_file": "matrix-patch-reproducibility.json",
+    "source_sha256": "bae29857813c8cfe044ddd794a27b447450c30ab0fc786bc6d007b0101dfdf89"
+  },
+  "hello-world.json": {
+    "source_artifact_id": "20261002T224832Z-run-hello_world-k8zi7veo",
+    "source_file": "result.json",
+    "source_sha256": "20a0cfb861e4a0f95c758cd41e9e3d95b256bdbd8b69cc9a8a611c6a3e2e2ec4"
+  },
+  "scalar-vector.json": {
+    "source_artifact_id": "20261002T224833Z-run-scalar_vector-jpnpnoaj",
+    "source_file": "result.json",
+    "source_sha256": "ee61af6868c7e6f0a492cda60e1287150d5fbe9660f7e9aed09c80c3f861eba4"
+  },
+  "matrix-events.csv": {
+    "source_artifact_id": "20261003T172527Z-matrix-run-scalar_vector_matrix-y00_mkrz",
+    "source_file": "matrix-events.csv",
+    "source_sha256": "b6665fddc6d37c92cfa91c4b1419c632c1cd39150210650b07024043be842c7a"
+  }
+}

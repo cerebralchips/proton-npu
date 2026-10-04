@@ -1,0 +1,20 @@
+{
+  "result": "PASS",
+  "gate": "integer PE, tile, AXI-Lite and router",
+  "test_sha256": {
+    "tests/matrix/bus_tb.sv": "fa0a4ee7d4df233cb57ad390c090591030b10a0eb5e18f273dee28f1cd45a615",
+    "tests/matrix/generate.py": "bae6659f47949072f423843173a1c1665199c91c8b455cee322c4015129aeafb",
+    "tests/matrix/workload.py": "557d807114fd71c86e71ffe58bc827477047fc4109da913e7eb92a7093d12af8",
+    "tests/matrix/router_tb.sv": "868ec00839a6d1dffbdea7a73f9f58edb95500a9f837feedfe2e4d07a1bf1ef2",
+    "tests/matrix/tile_tb.sv": "f3d9138a249cbca8cd28fd16963089d605540281219d8ff3646ea55be28ba57e"
+  },
+  "rtl_sha256": {
+    "hardware/matrix/quadrilatero_pkg.sv": "91f854c1c654a4307e09fc6efe6ef478c8f892ad605898fae36d51f8f1c9048e",
+    "hardware/matrix/vendor/quadrilatero/quadrilatero_mac_int.sv": "bc2d562ddba741f14bf2c0d6044093eea77e7fc637d9f291b87309bc644bae54",
+    "hardware/matrix/vendor/quadrilatero/quadrilatero_pe.sv": "44db573fc3ad83d4b34c1fdddfcbc4ce2119c4d134c4af5041d8ff579fa25d30",
+    "hardware/matrix/vendor/quadrilatero/quadrilatero_mesh.sv": "dfb0d3d7b302360bad8a320a4b6fd561e6eb3ce036724cb5ba1c30143bbf6d69",
+    "hardware/matrix/matrix_tile.sv": "1d12a380d180782a0b57244e96f7712f87717c668a83f680b28c9b250d01cb70",
+    "hardware/matrix/matrix_axi_lite.sv": "8fdce704e968df66b2687d4a339ae75c7a9cd74f2cd787a73893aa4822f7b871",
+    "hardware/matrix/matrix_router.sv": "c64ed5e6078ecb09e750f7881fbcac99c55523c3217df88ca435f035b12be133"
+  }
+}

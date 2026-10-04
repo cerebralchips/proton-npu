@@ -1,0 +1,34 @@
+# scripts/lab/host-vm.sh replaces __REPO__ with the absolute host checkout path.
+vmType: vz
+arch: aarch64
+cpus: 6
+memory: 8GiB
+disk: 60GiB
+images:
+  - location: https://cloud-images.ubuntu.com/releases/noble/release-20260705/ubuntu-24.04-server-cloudimg-arm64.img
+    arch: aarch64
+    digest: sha256:7df0201546f75b8bcc1044594c806c35749421ad3c9bc1be2a3ab806cfae39cc
+mountType: virtiofs
+mounts:
+  - location: __REPO__
+    mountPoint: /ara-workspace
+    writable: true
+containerd:
+  system: false
+  user: false
+provision:
+  - mode: system
+    script: |
+      #!/bin/sh
+      set -eu
+      if [ ! -f /var/lib/proton-npu.swap ]; then
+        fallocate -l 4G /var/lib/proton-npu.swap
+        chmod 600 /var/lib/proton-npu.swap
+        mkswap /var/lib/proton-npu.swap
+      fi
+      if ! swapon --show=NAME --noheadings | grep -qx /var/lib/proton-npu.swap; then
+        swapon /var/lib/proton-npu.swap
+      fi
+portForwards:
+  - guestPortRange: [1, 65535]
+    ignore: true

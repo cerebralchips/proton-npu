@@ -1,0 +1,15 @@
+{
+  "result": "PASS",
+  "checks": [
+    {
+      "test": "wrong-result",
+      "result": "PASS: intended failure rejected",
+      "source_artifact_id": "20261003T171728Z-matrix-run-scalar_vector_matrix-80sknrtz"
+    },
+    {
+      "test": "cycle-timeout",
+      "result": "PASS: intended failure rejected",
+      "source_artifact_id": "20261003T171729Z-matrix-run-scalar_vector_matrix-e0p_4a4_"
+    }
+  ]
+}

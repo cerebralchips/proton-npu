@@ -1,0 +1,22 @@
+[
+  {
+    "repository": "upstream/ara",
+    "patches": [
+      "0001-remove-invalid-waiver-characters.patch",
+      "0002-spike-linker-sections.patch",
+      "0003-decimal-cycle-statistics.patch",
+      "0004-track-testbench-build-inputs.patch",
+      "0005-matrix-integration.patch"
+    ],
+    "files": 9,
+    "result": "PASS"
+  },
+  {
+    "repository": "upstream/ara/hardware/deps/cva6",
+    "patches": [
+      "0001-matrix-serialization.patch"
+    ],
+    "files": 2,
+    "result": "PASS"
+  }
+]

@@ -1,0 +1,4 @@
+# Patch context includes intentional blank lines with a leading space.
+*.patch -whitespace
+# Preserve byte-identical upstream files and their recorded hashes.
+hardware/matrix/vendor/quadrilatero/*.sv -whitespace

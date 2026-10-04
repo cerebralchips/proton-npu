@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 808" role="img" aria-labelledby="title desc">
+<title id="title">Matrix PE mesh and dataflow</title>
+<desc id="desc">Four rows and four columns of packed dot-product PEs. Each row handles four K elements. A moves horizontally, B weights remain at each PE, partial sums move vertically, and the controller collects the sixteen C results.</desc>
+<defs>
+<marker id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<path d="M0,0 L8,4 L0,8" fill="#1764d6"/>
+</marker>
+<marker id="teal" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<path d="M0,0 L8,4 L0,8" fill="#087e8b"/>
+</marker>
+<marker id="amber" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
+<path d="M0,0 L8,4 L0,8" fill="#ab6000"/>
+</marker>
+</defs>
+<rect width="900" height="808" fill="white"/>
+<g font-family="system-ui,-apple-system,Segoe UI,sans-serif" fill="#142b3a">
+<rect x="45" y="25" width="405" height="87" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="63" y="57" font-size="21" fill="#ab6000" font-weight="650">Command: mmacc</text>
+<text x="63" y="86" font-size="15" fill="#142b3a" font-weight="400">C[4×4] += A[4×16] × B[16×4]</text>
+<text x="475" y="59" font-size="18" fill="#ab6000" font-weight="650">4×4 physical PEs · signed INT8 × INT8</text>
+<text x="475" y="88" font-size="15" fill="#142b3a" font-weight="400">Four products per cell; INT32 partial sum.</text>
+<text x="20" y="220" font-size="15" fill="#1764d6" font-weight="650">K 0–3</text>
+<rect x="145" y="158" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="163" y="190" font-size="21" fill="#ab6000" font-weight="650">PE 0,0</text>
+<text x="158" y="219" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M295 198 H320" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M220 241 V270" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="320" y="158" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="338" y="190" font-size="21" fill="#ab6000" font-weight="650">PE 0,1</text>
+<text x="333" y="219" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M470 198 H495" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M395 241 V270" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="495" y="158" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="513" y="190" font-size="21" fill="#ab6000" font-weight="650">PE 0,2</text>
+<text x="508" y="219" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M645 198 H670" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M570 241 V270" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="670" y="158" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="688" y="190" font-size="21" fill="#ab6000" font-weight="650">PE 0,3</text>
+<text x="683" y="219" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M745 241 V270" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<path d="M97 198 H145" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<text x="20" y="332" font-size="15" fill="#1764d6" font-weight="650">K 4–7</text>
+<rect x="145" y="270" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="163" y="302" font-size="21" fill="#ab6000" font-weight="650">PE 1,0</text>
+<text x="158" y="331" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M295 310 H320" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M220 353 V382" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="320" y="270" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="338" y="302" font-size="21" fill="#ab6000" font-weight="650">PE 1,1</text>
+<text x="333" y="331" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M470 310 H495" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M395 353 V382" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="495" y="270" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="513" y="302" font-size="21" fill="#ab6000" font-weight="650">PE 1,2</text>
+<text x="508" y="331" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M645 310 H670" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M570 353 V382" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="670" y="270" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="688" y="302" font-size="21" fill="#ab6000" font-weight="650">PE 1,3</text>
+<text x="683" y="331" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M745 353 V382" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<path d="M97 310 H145" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<text x="20" y="444" font-size="15" fill="#1764d6" font-weight="650">K 8–11</text>
+<rect x="145" y="382" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="163" y="414" font-size="21" fill="#ab6000" font-weight="650">PE 2,0</text>
+<text x="158" y="443" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M295 422 H320" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M220 465 V494" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="320" y="382" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="338" y="414" font-size="21" fill="#ab6000" font-weight="650">PE 2,1</text>
+<text x="333" y="443" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M470 422 H495" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M395 465 V494" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="495" y="382" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="513" y="414" font-size="21" fill="#ab6000" font-weight="650">PE 2,2</text>
+<text x="508" y="443" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M645 422 H670" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<path d="M570 465 V494" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="670" y="382" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="688" y="414" font-size="21" fill="#ab6000" font-weight="650">PE 2,3</text>
+<text x="683" y="443" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M745 465 V494" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<path d="M97 422 H145" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<text x="20" y="556" font-size="15" fill="#1764d6" font-weight="650">K 12–15</text>
+<rect x="145" y="494" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="163" y="526" font-size="21" fill="#ab6000" font-weight="650">PE 3,0</text>
+<text x="158" y="555" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M295 534 H320" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<rect x="320" y="494" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="338" y="526" font-size="21" fill="#ab6000" font-weight="650">PE 3,1</text>
+<text x="333" y="555" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M470 534 H495" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<rect x="495" y="494" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="513" y="526" font-size="21" fill="#ab6000" font-weight="650">PE 3,2</text>
+<text x="508" y="555" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M645 534 H670" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<rect x="670" y="494" width="150" height="83" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="688" y="526" font-size="21" fill="#ab6000" font-weight="650">PE 3,3</text>
+<text x="683" y="555" font-size="12" fill="#142b3a" font-weight="400">Σ 4 products + psum</text>
+<path d="M97 534 H145" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
+<text x="175" y="142" font-size="14" fill="#ab6000" font-weight="600">B column 0</text>
+<path d="M220 578 V615" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<text x="350" y="142" font-size="14" fill="#ab6000" font-weight="600">B column 1</text>
+<path d="M395 578 V615" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<text x="525" y="142" font-size="14" fill="#ab6000" font-weight="600">B column 2</text>
+<path d="M570 578 V615" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<text x="700" y="142" font-size="14" fill="#ab6000" font-weight="600">B column 3</text>
+<path d="M745 578 V615" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)"/>
+<rect x="145" y="615" width="675" height="85" rx="12" fill="#fff7e9" stroke="#ab6000" stroke-width="1.6"/>
+<text x="163" y="647" font-size="21" fill="#ab6000" font-weight="650">Result capture → C tile</text>
+<text x="163" y="676" font-size="15" fill="#142b3a" font-weight="400">16 row-major INT32 results; CPU reads them through the AXI window</text>
+<text x="145" y="743" font-size="16" fill="#142b3a" font-weight="400">Blue: packed A travels right. Amber: partial sums travel down.</text>
+<text x="145" y="773" font-size="14" fill="#536979" font-weight="400">Each PE keeps a packed B weight. The controller skews inputs and advances the mesh ten times.</text>
+</g>
+</svg>

@@ -1,0 +1,129 @@
+--- a/core/include/ariane_pkg.sv
++++ b/core/include/ariane_pkg.sv
+@@ -488,6 +488,9 @@
+     ACCEL_OP_FD,
+     ACCEL_OP_LOAD,
+     ACCEL_OP_STORE,
++`ifdef MATRIX_ENABLE
++    ACCEL_OP_MATRIX,
++`endif
+     // Zicond instruction
+     CZERO_EQZ,
+     CZERO_NEZ,
+--- a/core/acc_dispatcher.sv
++++ b/core/acc_dispatcher.sv
+@@ -114,6 +114,26 @@
+   logic acc_no_ld_pending;
+   logic acc_no_st_pending;
+ 
++`ifdef MATRIX_ENABLE
++  // Serialize younger issue from matrix issue until its tagged response.
++  // A speculative matrix instruction is discarded by the ordinary pipeline flush.
++  logic matrix_pending_q, matrix_sent_q;
++  logic [CVA6Cfg.TRANS_ID_BITS-1:0] matrix_id_q;
++  always_ff @(posedge clk_i or negedge rst_ni) begin
++    if (!rst_ni) begin matrix_pending_q<=0; matrix_sent_q<=0; matrix_id_q<='0; end
++    else begin
++      if (acc_valid_d && issue_instr_i.op == ACCEL_OP_MATRIX) begin
++        matrix_pending_q<=1; matrix_id_q<=issue_instr_i.trans_id;
++      end
++      if (acc_req_o.acc_req.req_valid && acc_resp_i.acc_resp.req_ready && acc_req_o.acc_req.insn[6:0]==7'h2b)
++        matrix_sent_q<=1;
++      if (flush_ex_i && !matrix_sent_q) matrix_pending_q<=0;
++      if (matrix_pending_q && matrix_sent_q && acc_resp_i.acc_resp.resp_valid && acc_resp_i.acc_resp.trans_id==matrix_id_q) begin
++        matrix_pending_q<=0; matrix_sent_q<=0;
++      end
++    end
++  end
++`endif
+   // Stall issue stage in three cases:
+   always_comb begin : stall_issue
+     unique case (issue_instr_i.fu)
+@@ -128,6 +148,9 @@
+       issue_stall_o = acc_cons_en_i & (~acc_no_st_pending | ~acc_no_ld_pending);
+       default: issue_stall_o = 1'b0;
+     endcase
++`ifdef MATRIX_ENABLE
++    issue_stall_o |= matrix_pending_q;
++`endif
+   end
+ 
+   /***********************
+@@ -229,7 +252,12 @@
+   assign acc_req_o.acc_req.rs2           = acc_req_int.rs2;
+   assign acc_req_o.acc_req.frm           = acc_req_int.frm;
+   assign acc_req_o.acc_req.trans_id      = acc_req_int.trans_id;
++`ifdef MATRIX_ENABLE
++  assign acc_req_o.acc_req.store_pending = !acc_no_st_pending_i &&
++    (acc_cons_en_i || acc_req_int.insn[6:0] == 7'h2b);
++`else
+   assign acc_req_o.acc_req.store_pending = !acc_no_st_pending_i && acc_cons_en_i;
++`endif
+   assign acc_req_o.acc_req.acc_cons_en   = acc_cons_en_i;
+   assign acc_req_o.acc_req.inval_ready   = inval_ready_i;
+ 
+@@ -268,6 +296,14 @@
+       // Wait until the instruction is no longer speculative.
+       acc_req_valid      = insn_ready_q[acc_insn_queue_o.trans_id] ||
+                            (acc_commit && insn_pending_q[acc_commit_trans_id] && !flush_unissued_instr_i);
++`ifdef MATRIX_ENABLE
++      // Conservative v1 dispatch: all accelerators wait for retirement slot 0.
++      // An older fence in slot 0 may flush/refetch slot 1, so issuing from slot 1
++      // could repeat irreversible side effects (including a vector store).
++      acc_req_valid = !commit_instr_i[0].valid && commit_instr_i[0].fu == ACCEL &&
++        commit_instr_i[0].trans_id == acc_insn_queue_o.trans_id &&
++        !flush_unissued_instr_i && !flush_ex_i;
++`endif
+       acc_insn_queue_pop = acc_req_valid && acc_req_ready;
+     end
+   end
+@@ -294,8 +330,15 @@
+   assign acc_req_o.acc_req.resp_ready = 1'b1;
+ 
+   // Signal dispatched load/store to issue stage
++`ifdef MATRIX_ENABLE
++  // Count transfers into the request spill register once, on valid AND ready.
++  // Counting valid alone underflows the speculative counters during backpressure.
++  assign acc_ld_disp = acc_insn_queue_pop && (acc_insn_queue_o.operation == ACCEL_OP_LOAD);
++  assign acc_st_disp = acc_insn_queue_pop && (acc_insn_queue_o.operation == ACCEL_OP_STORE);
++`else
+   assign acc_ld_disp = acc_req_valid && (acc_insn_queue_o.operation == ACCEL_OP_LOAD);
+   assign acc_st_disp = acc_req_valid && (acc_insn_queue_o.operation == ACCEL_OP_STORE);
++`endif
+ 
+   // Cache invalidation
+   assign inval_valid_o = acc_resp_i.acc_resp.inval_valid;
+@@ -319,7 +362,11 @@
+   always_comb begin : dirty_v_state
+     dirty_v_state_o = 1'b0;
+     for (int i = 0; i < CVA6Cfg.NrCommitPorts; i++) begin
+-      dirty_v_state_o |= commit_ack_i[i] & (commit_instr_i[i].fu == ACCEL);
++      dirty_v_state_o |= commit_ack_i[i] & (commit_instr_i[i].fu == ACCEL)
++`ifdef MATRIX_ENABLE
++        & (commit_instr_i[i].op != ACCEL_OP_MATRIX)
++`endif
++        ;
+     end
+   end
+ 
+@@ -443,4 +490,20 @@
+   assign single_step_o          = 1'b0;
+   assign acc_dcache_req_ports_o = '0;
+ 
++`ifdef MATRIX_ENABLE
++`ifndef SYNTHESIS
++  integer matrix_debug_file;
++  initial matrix_debug_file=$fopen("accelerator-dispatch.csv","w");
++  always @(posedge clk_i) if(rst_ni) begin
++    if(acc_req_o.acc_req.req_valid && acc_resp_i.acc_resp.req_ready && acc_req_o.acc_req.insn[6:0]==7'h2b &&
++       (commit_instr_i[0].trans_id!=acc_req_o.acc_req.trans_id || commit_instr_i[0].op!=ACCEL_OP_MATRIX || flush_ex_i))
++      $fatal(1,"matrix dispatch before precise commit boundary");
++    if(acc_valid_d) $fwrite(matrix_debug_file,"%0t,issue,pc=%h,id=%0d,op=%0d,insn=%h\n",$time,issue_instr_i.pc,issue_instr_i.trans_id,issue_instr_i.op,issue_instr_i.result[31:0]);
++    if(acc_valid_q) $fwrite(matrix_debug_file,"%0t,queue,id=%0d,op=%0d,insn=%h\n",$time,fu_data_i.trans_id,fu_data_i.operation,fu_data_i.imm[31:0]);
++    if(acc_insn_queue_pop) $fwrite(matrix_debug_file,"%0t,pop,id=%0d,insn=%h\n",$time,acc_insn_queue_o.trans_id,acc_insn_queue_o.imm[31:0]);
++    if(acc_req_o.acc_req.req_valid && acc_resp_i.acc_resp.req_ready) $fwrite(matrix_debug_file,"%0t,dispatch,id=%0d,insn=%h\n",$time,acc_req_o.acc_req.trans_id,acc_req_o.acc_req.insn);
++  end
++  final $fclose(matrix_debug_file);
++`endif
++`endif
+ endmodule : acc_dispatcher

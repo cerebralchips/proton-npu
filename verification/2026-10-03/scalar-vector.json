@@ -1,0 +1,89 @@
+{
+  "application": "scalar_vector",
+  "configuration": "2_lanes",
+  "lanes": 2,
+  "vlen_bits": 2048,
+  "validation": "RTL self-check + Spike application-result comparison (separate runtime ELFs)",
+  "result": "PASS",
+  "trace": false,
+  "max_cycles": 2000000,
+  "injected_failure": false,
+  "sources": {
+    "ara": {
+      "url": "https://github.com/pulp-platform/ara.git",
+      "commit": "34bd3bc152421b4601a7bf3d6e8e91ffb545c99e"
+    },
+    "cva6": {
+      "url": "https://github.com/pulp-platform/cva6.git",
+      "commit": "99eac9a649001bdf5b8f9da52e0ca73d5c48db1c"
+    },
+    "configuration": "2_lanes",
+    "lanes": 2,
+    "vlen_bits": 2048,
+    "llvm": {
+      "version": "20.1.0",
+      "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.0/LLVM-20.1.0-Linux-ARM64.tar.xz",
+      "sha256": "9d1bbf3f6d4d011e3b8b4b585f686bc968474917f37d3b82b4a534f456168c67"
+    },
+    "bender": {
+      "version": "0.31.0",
+      "url": "https://github.com/pulp-platform/bender/releases/download/v0.31.0/bender-0.31.0-arm64-linux-gnu-ubuntu24.04.tar.gz",
+      "sha256": "117af7701628db067fb3b4c34b5ab0bcead77102ef378aacbb8e8bf4887131bf"
+    },
+    "verilator": {
+      "commit": "06263ec724e7bf1fb0a0366b3aec54cd431c51d6"
+    },
+    "spike": {
+      "commit": "204b88deda9bcb7537bc09ae5c320f691e8839ef"
+    },
+    "c_runtime": {
+      "provider": "existing CVA6 lab GCC 13.1.0 / Newlib 4.3.0 installation",
+      "guest_relative_path": ".local/share/cva6-lab/gcc-13.1.0",
+      "usage": "read-only sysroot and libgcc for LLVM; recorded deviation from Ara's source-built Newlib/compiler-rt recipe"
+    }
+  },
+  "elf_sha256": "36796acf29725346c08861b702a00856fe3ac1680ad6a577998d08849ae0aef3",
+  "rtl_cycles": 57632,
+  "cases": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      7,
+      70
+    ],
+    [
+      63,
+      5922
+    ],
+    [
+      64,
+      6112
+    ],
+    [
+      65,
+      6305
+    ],
+    [
+      127,
+      24130
+    ],
+    [
+      128,
+      24512
+    ],
+    [
+      129,
+      24897
+    ],
+    [
+      257,
+      98945
+    ]
+  ]
+}

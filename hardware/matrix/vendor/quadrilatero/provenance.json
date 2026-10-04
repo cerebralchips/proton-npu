@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/pulp-platform/quadrilatero.git",
+  "commit": "4e4f41520d0784ecb750a22d0715d5a22cca8e26",
+  "license": "Apache-2.0 WITH SHL-2.1",
+  "files": {
+    "quadrilatero_mac_int.sv": "bc2d562ddba741f14bf2c0d6044093eea77e7fc637d9f291b87309bc644bae54",
+    "LICENSE.md": "225f96156c999f51c5ead140cd2733d45071badd7377beaf265db544ea46223f",
+    "quadrilatero_pe.sv": "44db573fc3ad83d4b34c1fdddfcbc4ce2119c4d134c4af5041d8ff579fa25d30",
+    "quadrilatero_mesh.sv": "dfb0d3d7b302360bad8a320a4b6fd561e6eb3ce036724cb5ba1c30143bbf6d69"
+  },
+  "reuse": "Unmodified integer MAC, PE and mesh; FPU=0. Minimal package adapter kept separately."
+}

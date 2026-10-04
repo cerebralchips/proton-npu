@@ -1,0 +1,13 @@
+diff --git a/hardware/tb/verilator/lowrisc_dv_verilator_simutil_verilator/cpp/verilator_sim_ctrl.cc b/hardware/tb/verilator/lowrisc_dv_verilator_simutil_verilator/cpp/verilator_sim_ctrl.cc
+index fad078f..7fd9224 100644
+--- a/hardware/tb/verilator/lowrisc_dv_verilator_simutil_verilator/cpp/verilator_sim_ctrl.cc
++++ b/hardware/tb/verilator/lowrisc_dv_verilator_simutil_verilator/cpp/verilator_sim_ctrl.cc
+@@ -248,7 +248,7 @@ void VerilatorSimCtrl::PrintStatistics() const {
+   double speed_hz = time_ / 2 / (GetExecutionTimeMs() / 1000.0);
+   double speed_khz = speed_hz / 1000.0;
+ 
+-  std::cout << std::endl
++  std::cout << std::dec << std::endl
+             << "Simulation statistics" << std::endl
+             << "=====================" << std::endl
+             << "Executed cycles:  " << time_ / 2 << std::endl

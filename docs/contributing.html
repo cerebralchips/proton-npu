@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="A map of the source tree, the supported build environment, and the checks that protect the working hardware milestone.">
+<title>Contribute to Proton NPU · Cerebral Chips</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top">
+<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><span class="org">Cerebral Chips<br>Hardware engineering</span>
+</div>
+</header>
+<div class="layout">
+<aside class="side">
+<div class="nav-label">Architecture guide</div>
+<nav aria-label="Documentation"><a href="index.html">Proton NPU</a><a href="cva6.html">CVA6 · scalar</a><a href="ara.html">Ara · vector</a><a href="matrix.html">Matrix · INT8</a><a href="contributing.html" aria-current="page">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
+</nav>
+<div class="secondary">
+<div class="nav-label">Project</div>
+<nav aria-label="Project resources"><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
+</nav>
+</div><small>Initial hardware milestone<br>RV64 · RVV · INT8 matrix<br>Documentation: 4 October 2026</small>
+</aside>
+<main id="main">
+<header class="hero">
+<div class="eyebrow">Engineering workflow / small verified changes</div>
+<h1>Contribute to Proton NPU</h1>
+<p class="lead">A map of the source tree, the supported build environment, and the checks that protect the working hardware milestone.</p>
+<div class="tags"><span class="tag">Pinned upstream IP</span><span class="tag">Reviewable patches</span><span class="tag">Explicit verification gates</span>
+</div>
+</header>
+<h2>Find the right layer</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th scope="col">Location</th><th scope="col">Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><code>hardware/matrix/</code></td><td>Our buffers, controller, bus target and command router</td>
+</tr>
+<tr><td><code>hardware/matrix/vendor/</code></td><td>Pinned compute RTL with original notices</td>
+</tr>
+<tr><td><code>patches/ara/</code></td><td>Reviewable Ara build, decoder and SoC integration changes</td>
+</tr>
+<tr><td><code>patches/cva6/</code></td><td>CPU ordering and accelerator bookkeeping changes</td>
+</tr>
+<tr><td><code>examples/</code></td><td>C applications, RVV intrinsics, matrix API and test startup</td>
+</tr>
+<tr><td><code>tests/matrix/</code></td><td>Independent arithmetic oracle and standalone RTL testbenches</td>
+</tr>
+<tr><td><code>scripts/</code></td><td>Provision, build, run and evidence-validation entry points</td>
+</tr>
+<tr><td><code>verification/</code></td><td>Small, committed verification records; raw runs stay local</td>
+</tr>
+<tr><td><code>docs/</code></td><td>This HTML guide, SVG diagrams and Markdown technical notes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>Start with a working baseline</h2>
+<pre><code>git clone --branch hardware https://github.com/cerebralchips/proton-npu.git
+cd proton-npu
+
+# Apple Silicon: create/start the Linux build VM
+./scripts/ara vm-start
+./scripts/ara provision
+./scripts/ara doctor
+
+# Verify the complete hardware and software path
+./scripts/ara matrix</code>
+</pre>
+<p>The supported tool profile is Ubuntu 24.04 ARM64. Apple Silicon uses Lima; ARM64 Linux can run the wrapper directly. Fresh provisioning builds the pinned runtime toolchain when one is not supplied. Existing users can provide <code>ARA_GCC_ROOT</code>.</p>
+<div class="source-links"><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/environment.md">Environment and prerequisites ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/AGENTS.md">Agent and contributor rules ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/CONTRIBUTING.md">Contribution checklist ↗</a>
+</div>
+<h2>Keep the verification gates intact</h2>
+<ol class="steps">
+<li><strong>Change one layer at a time.</strong> Keep a scalar arithmetic reference independent of the RTL schedule.</li>
+<li><strong>Run standalone gates.</strong> <code>./scripts/ara matrix-unit</code> checks arithmetic, bus behavior and routing.</li>
+<li><strong>Run the combined ELF.</strong> <code>./scripts/ara matrix</code> checks actual retired instructions and results.</li>
+<li><strong>Check integration regressions.</strong> Use <code>matrix-smoke</code>, <code>matrix-negative</code> and the original <code>smoke</code>.</li>
+<li><strong>Inspect waveforms when changing timing.</strong> <code>matrix-wave</code> independently checks every tile from RTL signals.</li>
+<li><strong>Update documentation and evidence.</strong> Preserve failed logs; state exactly what has passed.</li>
+</ol>
+<h2>Work on documentation</h2>
+<p>Edit the HTML files and SVG diagrams directly; no web framework, CDN or JavaScript build is required. Open <code>docs/index.html</code> locally, or serve the repository with <code>python3 -m http.server 8000</code> and browse <code>/docs/</code>.</p>
+<pre><code>python3 tests/repository/check.py
+python3 -m http.server 8000</code>
+</pre>
+<p class="small">The lightweight repository CI checks source packaging, documentation links and deterministic workload data. Full RTL verification remains a separate, explicit command and is not implied by that CI badge.</p>
+<footer class="footer"><span>Cerebral Chips · Proton NPU<br>Source-backed architecture notes.</span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/contributing.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
+</footer>
+</main>
+</div>
+</body>
+</html>

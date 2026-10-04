@@ -1,0 +1,74 @@
+[
+  {
+    "test": "rv64ui-ara-add",
+    "result": "PASS",
+    "rtl_cycles": 1163,
+    "source_artifact_id": "20261003T171709Z-matrix-run-rv64ui-ara-add-634brvxp",
+    "elf_sha256": "cf090076654a9fa96cfa243885564241492aad5efa1c7162b691fadfb36a6bdd",
+    "result_sha256": "29ce411d69db7d5c592a0e3d88660e97dc941f52a7dffb752cc1d2bb11bf94f0"
+  },
+  {
+    "test": "rv64um-ara-mul",
+    "result": "PASS",
+    "rtl_cycles": 1177,
+    "source_artifact_id": "20261003T171710Z-matrix-run-rv64um-ara-mul-htti7sqp",
+    "elf_sha256": "37cc43b7cf45f8b95edd24adc50c9f9f49f3fb3639c8a1ce535723a5fa2d7bc2",
+    "result_sha256": "94a397c56ea90b29c937b34fd4cf90564e33661621430dfe50d54a38d8646a69"
+  },
+  {
+    "test": "rv64uv-ara-vsetvli",
+    "result": "PASS",
+    "rtl_cycles": 40804,
+    "source_artifact_id": "20261003T171710Z-matrix-run-rv64uv-ara-vsetvli-ljroz8jk",
+    "elf_sha256": "f21422e79293b26ddc645fb34a10c09e1da7174b59a694a632696dd55db089a0",
+    "result_sha256": "95e8baa4fc7cb67b346b45b9c3758e8ddfdcc4dd0ee2fb91c3ce935590b68b2b"
+  },
+  {
+    "test": "rv64uv-ara-vadd",
+    "result": "PASS",
+    "rtl_cycles": 55230,
+    "source_artifact_id": "20261003T171712Z-matrix-run-rv64uv-ara-vadd-hgjaxc88",
+    "elf_sha256": "953a378ddf6b8f78a11b771f2640acc5fc0a683e2d53e022cbe9b5bed46c51d1",
+    "result_sha256": "5f6a32b07258a60dd9e979776edb7495f8cb06d5ff27aa0f7efca496ea6fa858"
+  },
+  {
+    "test": "rv64uv-ara-vmul",
+    "result": "PASS",
+    "rtl_cycles": 37872,
+    "source_artifact_id": "20261003T171713Z-matrix-run-rv64uv-ara-vmul-0x_zndwu",
+    "elf_sha256": "b886067a46d8b10e8b936e233ab09ed86822d0ef6fb2a8fb3e086797706ba1c3",
+    "result_sha256": "7af180cb063911c2c71b3ef263c4f9a74ed33d80e8511c21671fb336f5de69a0"
+  },
+  {
+    "test": "rv64uv-ara-vredsum",
+    "result": "PASS",
+    "rtl_cycles": 45835,
+    "source_artifact_id": "20261003T171715Z-matrix-run-rv64uv-ara-vredsum-76mbg195",
+    "elf_sha256": "8bfac356bd0df29c48ca7f8b0c652377379019ce5d1d00189aaf752e1f42b6a0",
+    "result_sha256": "f72a46f5994d1eecbe5fbc568303100f4e972b61cc2167f844f9fef4bd4a40ad"
+  },
+  {
+    "test": "rv64uv-ara-vle32",
+    "result": "PASS",
+    "rtl_cycles": 50961,
+    "source_artifact_id": "20261003T171716Z-matrix-run-rv64uv-ara-vle32-udwqjpbe",
+    "elf_sha256": "39ef292978240abf311e781897e761806c5e637d36f3b6821f6109fd1a4a4534",
+    "result_sha256": "827c093196b2f371fa6e51d9cea7d63e5190f11b956e4456107df02c73021082"
+  },
+  {
+    "test": "rv64uv-ara-vse32",
+    "result": "PASS",
+    "rtl_cycles": 105152,
+    "source_artifact_id": "20261003T171718Z-matrix-run-rv64uv-ara-vse32-t7e3u616",
+    "elf_sha256": "25ff9b8ad8226c893a15996ed3f127712459e2fb99f88de06347d629df0c3ce1",
+    "result_sha256": "e694066eb993fbb8afb9a4cc51cbf56ff0e17ef4d411f13fa412636278ca4367"
+  },
+  {
+    "test": "rv64uv-ara-vfadd",
+    "result": "PASS",
+    "rtl_cycles": 54084,
+    "source_artifact_id": "20261003T171721Z-matrix-run-rv64uv-ara-vfadd-0739znpk",
+    "elf_sha256": "487909fbceef758aa84e2a3293e8b1ff35b86044440e28121b277f781dec30c8",
+    "result_sha256": "ab3bf6f6f3427276a72cf4b0f1ed4d93b0c45ab4648d406dc2bf611d9ce66ec0"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "test": "rv64ui-ara-add",
+    "result": "PASS",
+    "rtl_cycles": 1163,
+    "source_artifact_id": "20261003T172310Z-run-rv64ui-ara-add-44_be5ey",
+    "elf_sha256": "cf090076654a9fa96cfa243885564241492aad5efa1c7162b691fadfb36a6bdd",
+    "result_sha256": "83cdbe67f9063fc0e4f48dc9b218976721fe30c01ae7d84acf30f599091bb9bb"
+  },
+  {
+    "test": "rv64um-ara-mul",
+    "result": "PASS",
+    "rtl_cycles": 1177,
+    "source_artifact_id": "20261003T172310Z-run-rv64um-ara-mul-w89okw0e",
+    "elf_sha256": "37cc43b7cf45f8b95edd24adc50c9f9f49f3fb3639c8a1ce535723a5fa2d7bc2",
+    "result_sha256": "6d42c71a468fe5f5d5f57325892c2ad794ff0e7209d6609a55379fb5d6494628"
+  },
+  {
+    "test": "rv64uv-ara-vsetvli",
+    "result": "PASS",
+    "rtl_cycles": 40804,
+    "source_artifact_id": "20261003T172311Z-run-rv64uv-ara-vsetvli-ngxseai3",
+    "elf_sha256": "f21422e79293b26ddc645fb34a10c09e1da7174b59a694a632696dd55db089a0",
+    "result_sha256": "bc9c616be9dc15e3c09a97024c86ba1a277ea1b57dd67221a8ec75cb581a84a3"
+  },
+  {
+    "test": "rv64uv-ara-vadd",
+    "result": "PASS",
+    "rtl_cycles": 55112,
+    "source_artifact_id": "20261003T172313Z-run-rv64uv-ara-vadd-0vr199k1",
+    "elf_sha256": "953a378ddf6b8f78a11b771f2640acc5fc0a683e2d53e022cbe9b5bed46c51d1",
+    "result_sha256": "67830b58267fe09ceedf5de145584d4b8f7dc0b6847149ec3dd69272fdb84b6a"
+  },
+  {
+    "test": "rv64uv-ara-vmul",
+    "result": "PASS",
+    "rtl_cycles": 37830,
+    "source_artifact_id": "20261003T172314Z-run-rv64uv-ara-vmul-k7xw_cn8",
+    "elf_sha256": "b886067a46d8b10e8b936e233ab09ed86822d0ef6fb2a8fb3e086797706ba1c3",
+    "result_sha256": "e12044ba774f1415b703fb0fb81adf19e895b5a8b277dc22cd26e1582f68164b"
+  },
+  {
+    "test": "rv64uv-ara-vredsum",
+    "result": "PASS",
+    "rtl_cycles": 45825,
+    "source_artifact_id": "20261003T172316Z-run-rv64uv-ara-vredsum-_e4h0ruf",
+    "elf_sha256": "8bfac356bd0df29c48ca7f8b0c652377379019ce5d1d00189aaf752e1f42b6a0",
+    "result_sha256": "a8bd68c1ff26f6bce1c5ff5a7d1ea7026fc5e82f61beb3e785d75bb1bb4b8ab9"
+  },
+  {
+    "test": "rv64uv-ara-vle32",
+    "result": "PASS",
+    "rtl_cycles": 50966,
+    "source_artifact_id": "20261003T172318Z-run-rv64uv-ara-vle32-0pipw1ti",
+    "elf_sha256": "39ef292978240abf311e781897e761806c5e637d36f3b6821f6109fd1a4a4534",
+    "result_sha256": "4f2cb60ca4ccce36c626a5592b1db9bbc6d02426316fde14e94b44efc24cfc33"
+  },
+  {
+    "test": "rv64uv-ara-vse32",
+    "result": "PASS",
+    "rtl_cycles": 105062,
+    "source_artifact_id": "20261003T172319Z-run-rv64uv-ara-vse32-i0ttpivo",
+    "elf_sha256": "25ff9b8ad8226c893a15996ed3f127712459e2fb99f88de06347d629df0c3ce1",
+    "result_sha256": "2f9445a2c69c9489e5d9a9cdbee8fe4d66509410c7a3aa188f26b0afd47d0c35"
+  },
+  {
+    "test": "rv64uv-ara-vfadd",
+    "result": "PASS",
+    "rtl_cycles": 54090,
+    "source_artifact_id": "20261003T172322Z-run-rv64uv-ara-vfadd-wwja9ez0",
+    "elf_sha256": "487909fbceef758aa84e2a3293e8b1ff35b86044440e28121b277f781dec30c8",
+    "result_sha256": "4e153cf646eaf1708c2361e50d49f8b2a1a06bdc5ca75c047b1496da4ae183ac"
+  }
+]

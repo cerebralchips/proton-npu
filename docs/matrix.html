@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="Sixteen processing elements compute small tiles, while a C library assembles those tiles into larger matrix products.">
+<title>Matrix: the INT8 engine · Cerebral Chips</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top">
+<div class="top-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">P</span> Proton NPU</a><span class="org">Cerebral Chips<br>Hardware engineering</span>
+</div>
+</header>
+<div class="layout">
+<aside class="side">
+<div class="nav-label">Architecture guide</div>
+<nav aria-label="Documentation"><a href="index.html">Proton NPU</a><a href="cva6.html">CVA6 · scalar</a><a href="ara.html">Ara · vector</a><a href="matrix.html" aria-current="page">Matrix · INT8</a><a href="contributing.html">Contribute</a><a href="pe-array-explorer.html">PE step explorer</a>
+</nav>
+<div class="secondary">
+<div class="nav-label">Project</div>
+<nav aria-label="Project resources"><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
+</nav>
+</div><small>Initial hardware milestone<br>RV64 · RVV · INT8 matrix<br>Documentation: 4 October 2026</small>
+</aside>
+<main id="main">
+<header class="hero">
+<div class="eyebrow">Block 03 / packed dot products</div>
+<h1>Matrix: the INT8 engine</h1>
+<p class="lead">Sixteen processing elements compute small tiles, while a C library assembles those tiles into larger matrix products.</p>
+<div class="tags"><span class="tag">INT8 × INT8</span><span class="tag">INT32 accumulation</span><span class="tag">Custom-1 commands</span>
+</div>
+</header>
+<h2>A small, explicit matrix engine</h2>
+<p>We reuse the integer MAC, processing element and mesh RTL from Quadrilatero. Our integration adds the tile buffers, scheduling controller, AXI target and custom command path. Each PE computes a packed dot product of four signed byte pairs and adds an INT32 partial sum.</p>
+<figure class="figure"><a href="assets/matrix.svg" aria-label="Open 4 by 4 packed INT8 PE mesh at full size"><img src="assets/matrix.svg" alt="4 by 4 packed INT8 PE mesh"></a>
+<figcaption>Mesh rows represent K groups, not output matrix rows. The controller streams the four A rows with staggered timing and gathers the results into a separate C tile buffer. <a href="assets/matrix.svg">Open full-size diagram ↗</a>
+</figcaption>
+</figure>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th scope="col">Property</th><th scope="col">Current implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Array</td><td>4 × 4 = 16 physical PEs</td>
+</tr>
+<tr><td>Per PE</td><td>Four INT8 products + INT32 accumulation</td>
+</tr>
+<tr><td>Operation</td><td>C[4][4] += A[4][16] × transpose(BT[4][16])</td>
+</tr>
+<tr><td>Storage</td><td>A: 64 bytes; BT: 64 bytes; C: 64 bytes</td>
+</tr>
+<tr><td>Output layout</td><td>Row-major INT32, modulo 2^32</td>
+</tr>
+<tr><td>Scheduling</td><td>10 mesh advances, then final capture; 12 observed issue-to-done cycles</td>
+</tr>
+<tr><td>mzero</td><td>Clear all sixteen C values</td>
+</tr>
+<tr><td>mmacc</td><td>Accumulate one K=16 tile; return scalar status 0</td>
+</tr>
+<tr><td>Larger dimensions</td><td>C library tiles M/N by 4 and K by 16; zero-pads incomplete tiles</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>Instruction and memory paths</h2>
+<p>The CPU writes operands to the uncached AXI window at <code>0xE0000000</code>. A starts at offset <code>0x100</code>, BT at <code>0x140</code>, and C at <code>0x180</code>. The engine performs no DMA. Software copies results back to ordinary RAM for subsequent scalar or RVV work.</p>
+<pre><code>.insn r 0x2b, 0, 0, rd, x0, x0   # mzero
+.insn r 0x2b, 0, 1, rd, x0, x0   # mmacc</code>
+</pre>
+<p>LLVM’s assembler already supports <code>.insn</code>, so the application needs no compiler modification. The hardware recognizes these two encodings; reserved encodings trap. This is a custom ISA contract.</p>
+<h2>Understand and verify the mesh</h2>
+<div class="cards two">
+<article class="card">
+<h3>Step through a small example</h3>
+<p>The interactive PE explorer explains operand movement and partial sums. It is a teaching model, distinct from recorded RTL evidence.</p><a href="pe-array-explorer.html">Open PE explorer →</a>
+</article>
+<article class="card">
+<h3>Inspect actual RTL</h3>
+<p>The matrix-wave command produces FST, a compact VCD and per-command arithmetic checks from real simulation signals.</p><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Waveform commands ↗</a>
+</article>
+</div>
+<div class="source-links"><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/hardware/matrix">Owned RTL ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/examples/scalar_vector_matrix/matrix.c">Tiling library ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/tests/matrix">Independent tests ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/hardware/matrix/vendor/quadrilatero/provenance.json">Upstream provenance ↗</a>
+</div>
+<footer class="footer"><span>Cerebral Chips · Proton NPU<br>Source-backed architecture notes.</span><span><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix.html">Edit this page ↗</a><br>Static HTML + SVG · works offline</span>
+</footer>
+</main>
+</div>
+</body>
+</html>
