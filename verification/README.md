@@ -79,3 +79,16 @@ visible without waveforms.
 **[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
 
 Every machine should think.
+
+## Programmable DMA — 7 October 2026
+
+[DMA qualification](2026-10-07/dma.json) records 80 unit checks, 21 copy/transpose
+transfers in each timing configuration, six rejected descriptors, negative gates
+and all existing scalar/vector/matrix/DDR regressions. Source hashes identify the
+executed RTL, test, integration patch and waveform checker.
+
+[DMA waveform checks](2026-10-07/dma-waveform.json) and
+[decoded transactions](2026-10-07/dma-transactions.csv) independently verify 257
+reads and 257 writes, including high DDR addresses, byte masks and completion
+ordering. Raw FST/VCD files stay in ignored artifacts. Reproduce with
+`./scripts/ara dma-test`; see the [design and programming guide](../docs/dma.md).

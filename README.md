@@ -25,6 +25,7 @@ ARM64 Linux VM.
 | Matrix operation | `C[4][4] += A[4][16] × transpose(BT[4][16])`, modulo 2³² |
 | Integration | Custom-1 `mzero` / `mmacc`; AXI-Lite mapped buffers at `0xe0000000` |
 | Internal memory | 16 MiB SRAM at `0x80000000`, shared by code and working buffers |
+| Optional DMA | One programmable SRAM/DDR copy + transpose channel; 8/16/32/64-bit elements |
 | Optional external memory | 4 GiB functional DDR model at `0x100000000`; separate `PROTON_DDR` simulation target |
 | Software | LLVM 20.1.0, RVV intrinsics and inline `.insn`; Newlib bare-metal runtime |
 
@@ -63,6 +64,7 @@ Run only one build/simulation at a time; the launcher enforces a guest lock.
 ./scripts/ara matrix-smoke   # Nine selected scalar/vector regression tests
 ./scripts/ara matrix-negative # Ensure wrong results and timeouts are rejected
 ./scripts/ara smoke          # Matrix-disabled baseline regression
+./scripts/ara dma-test       # Programmable SRAM/DDR copy + transpose, unit + CPU + FST checks
 ./scripts/ara ddr-test       # Optional 16 MiB SRAM + 4 GiB functional DDR target
 ./scripts/ara ddr-sweep-smoke # Dense vector DDR and DDR/SRAM/DDR checks on bounded ranges
 ./scripts/ara ddr-add         # Live DDR -> SRAM -> vector addition -> DDR, with PASS/FAIL
@@ -83,6 +85,15 @@ the [SDK reproduction guide](https://github.com/cerebralchips/proton-sdk/blob/ma
 for the qualified hardware revision and commands.
 The guide also includes a [timed vector-add exercise](docs/ddr-simulation.md#try-a-timed-ddr--sram--vector-addition--ddr-program)
 with a small example and an automatically calibrated, approximately one-hour run.
+
+## Programmable DMA
+
+The optional DMA configuration adds an independent AXI master for **SRAM ↔ DDR
+copy and transpose**, programmable through registers at `0xe0001000`. It supports
+8/16/32/64-bit elements and two-dimensional row strides. The first version is a
+single channel with polling, one element in flight, and explicit software cache
+ownership. See the [design, register map and tests](docs/dma.md). The original
+SRAM/DDR targets and CPU-fed matrix interface remain selectable.
 
 ## Verification baseline
 

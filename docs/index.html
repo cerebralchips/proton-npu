@@ -51,6 +51,7 @@
 <figcaption>Proton SDK compiles AI models into bare-metal programs. Packed projection weights live in 4 GiB simulated DDR; code and working buffers use 16 MiB SRAM. Blue routes instructions and completions. Teal carries memory traffic. The dashed amber path carries matrix commands. The matrix is an AXI target, not a memory-fetching DMA engine. <a href="assets/system.svg">Open full-size diagram ↗</a>
 </figcaption>
 </figure>
+<div class="callout"><p><strong>Optional programmable DMA.</strong> A separate AXI master moves data between SRAM and DDR, with a transpose flag, programmable row strides and 8/16/32/64-bit elements. The CPU programs and polls it; software manages cache ownership. <a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/dma.md">DMA design and verification →</a></p></div>
 <div class="cards">
 <article class="card"><span class="number">01</span>
 <h3>64-bit RISC-V core</h3>

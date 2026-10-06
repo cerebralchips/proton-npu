@@ -36,6 +36,8 @@ Usage: ./scripts/ara COMMAND [ARGS]
   matrix-wave                    Run the combined ELF and record FST
   matrix-smoke                   Run scalar/vector regressions on matrix configuration
   matrix-negative                Confirm wrong results and timeouts are rejected
+  dma-build / dma-test           Build / verify programmable copy + transpose DMA
+  dma-unit                       Check DMA AXI protocol and error handling
   ddr-build / ddr-test            Build / verify SRAM + 4 GiB simulated DDR
   ddr-sweep-smoke                 Check dense vector DDR and DDR/SRAM/DDR sweeps
   ddr-add / ddr-add-test          Live timed DDR/SRAM vector addition / sanity suite
@@ -57,7 +59,7 @@ EOF
     fi
     exec "$LIMACTL" shell --workdir=/ara-workspace "$VM" "$@"
     ;;
-  provision|doctor|build|hello|run|smoke|wave|matrix-unit|matrix|matrix-wave|matrix-smoke|matrix-negative|ddr-build|ddr-test|ddr-unit|ddr-sweep|ddr-sweep-smoke|ddr-add|ddr-add-test)
+  provision|doctor|build|hello|run|smoke|wave|matrix-unit|matrix|matrix-wave|matrix-smoke|matrix-negative|dma-build|dma-test|dma-unit|ddr-build|ddr-test|ddr-unit|ddr-sweep|ddr-sweep-smoke|ddr-add|ddr-add-test)
     if [[ $(uname -s) == Linux ]]; then
       exec bash "$ROOT/scripts/lab/guest.sh" "$command_name" "$@"
     fi

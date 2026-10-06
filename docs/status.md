@@ -120,3 +120,28 @@ reuse the validated GCC/Newlib runtime, while a clean checkout can build it.
 **[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
 
 Every machine should think.
+
+## Optional programmable DMA — 7 October 2026
+
+The `PROTON_DMA` configuration adds a separate AXI master and registers at
+`0xe0001000` for SRAM ↔ DDR copy and transpose. It supports 64-bit physical
+addresses, 8/16/32/64-bit elements and independent row strides. It is single
+channel, polled and noncoherent; the qualified bare-metal policy disables the
+CPU data cache and fences transfer-buffer ownership.
+
+All 80 unit checks and 21 CPU-driven transfer cases passed, plus six invalid
+descriptors. Normal and delayed runs took **459,863** and **495,473 cycles**.
+The actual FST independently verified **257 reads and 257 writes**, their
+addresses/data/strobes, transpose layout, completion ordering, and final DDR byte.
+The payload totals 945 bytes across directed cases; this is not a capacity sweep.
+
+The combined scalar/vector/matrix workload still passes in **115,650 cycles**
+on the DMA configuration, including its actual matrix tile waveform. Both
+nine-test regressions, matrix failure gates and the existing DDR suite passed.
+Corrupt DMA waveform expectations and a forced timeout were rejected.
+
+See the [DMA design and run guide](dma.md),
+[measured evidence](../verification/2026-10-07/dma.json), and
+[waveform checks](../verification/2026-10-07/dma-waveform.json). SDK DMA integration,
+cache-coherent operation, bursts, interrupts and physical implementation remain
+outside this qualification.

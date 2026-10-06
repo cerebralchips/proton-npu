@@ -1,0 +1,166 @@
+diff --git a/Bender.yml b/Bender.yml
+--- a/Bender.yml
++++ b/Bender.yml
+@@ -38,6 +38,10 @@
+         - hardware/src/matrix/matrix_tile.sv
+         - hardware/src/matrix/matrix_axi_lite.sv
+         - hardware/src/matrix/matrix_router.sv
++
++    - target: proton_dma
++      files:
++        - hardware/src/dma/proton_dma.sv
+ 
+     - target: proton_ddr
+       files:
+diff --git a/hardware/Makefile b/hardware/Makefile
+--- a/hardware/Makefile
++++ b/hardware/Makefile
+@@ -113,6 +113,9 @@
+ ifeq ($(ddr),1)
+ bender_defs += --define PROTON_DDR=1
+ endif
++ifeq ($(dma),1)
++bender_defs += --define PROTON_DMA=1
++endif
+ bender_defs_veril := $(bender_defs) --define COMMON_CELLS_ASSERTS_OFF
+ # Targets
+ bender_common_targs := -t rtl -t cv64a6_imafdcv_sv39 -t tech_cells_generic_include_tc_sram -t tech_cells_generic_include_tc_clk -t exclude_first_pass_decoder
+@@ -121,6 +124,9 @@
+ endif
+ ifeq ($(ddr),1)
+ bender_common_targs += -t proton_ddr
++endif
++ifeq ($(dma),1)
++bender_common_targs += -t proton_dma
+ endif
+ bender_targs_simc     := $(bender_common_targs) -t ara_test -t cva6_test
+ bender_targs_veril    := $(bender_common_targs) -t ara_test -t cva6_test -t verilator  -t tech_cells_generic_exclude_deprecated
+diff --git a/hardware/src/ara_soc.sv b/hardware/src/ara_soc.sv
+--- a/hardware/src/ara_soc.sv
++++ b/hardware/src/ara_soc.sv
+@@ -64,11 +64,18 @@
+   //  Memory Regions  //
+   //////////////////////
+ 
+-  localparam NrAXIMasters = 1; // Actually masters, but slaves on the crossbar
++`ifdef PROTON_DMA
++  localparam NrAXIMasters = 2; // CPU/vector system and DMA
++`else
++  localparam NrAXIMasters = 1;
++`endif
+ 
+   typedef enum int unsigned {
+ `ifdef PROTON_DDR
+     DDR = 4,
++`ifdef PROTON_DMA
++    DMA = 5,
++`endif
+ `endif
+     L2MEM = 0,
+     UART  = 1,
+@@ -91,7 +98,13 @@
+ `endif
+ 
+ `ifdef PROTON_DDR
++`ifdef PROTON_DMA
++  localparam NrAXISlaves = DMA + 1;
++  localparam logic [63:0] DmaBase = 64'hE0001000;
++  localparam logic [63:0] DmaLength = 64'h1000;
++`else
+   localparam NrAXISlaves = DDR + 1;
++`endif
+   localparam logic [63:0] DDRBase = 64'h1_0000_0000;
+   localparam logic [63:0] DDRLength = 64'h1_0000_0000;
+   initial if (AxiDataWidth != 64) $fatal(1, "DDR simulation requires two lanes");
+@@ -127,8 +140,8 @@
+   localparam AxiWideDataWidth   = AxiDataWidth;
+   localparam AXiWideStrbWidth   = AxiWideDataWidth / 8;
+ 
+-  localparam AxiSocIdWidth  = AxiIdWidth - $clog2(NrAXIMasters);
+-  localparam AxiCoreIdWidth = AxiSocIdWidth - 1;
++  localparam AxiSocIdWidth  = AxiIdWidth + $clog2(NrAXIMasters);
++  localparam AxiCoreIdWidth = AxiIdWidth - 1;
+ 
+   // Internal types
+   typedef logic [AxiNarrowDataWidth-1:0] axi_narrow_data_t;
+@@ -153,6 +166,11 @@
+   system_req_t  system_axi_req;
+   system_resp_t system_axi_resp;
+ 
++  system_req_t [NrAXIMasters-1:0] master_req;
++  system_resp_t [NrAXIMasters-1:0] master_resp;
++  assign master_req[0] = system_axi_req;
++  assign system_axi_resp = master_resp[0];
++
+   soc_wide_req_t    [NrAXISlaves-1:0] periph_wide_axi_req;
+   soc_wide_resp_t   [NrAXISlaves-1:0] periph_wide_axi_resp;
+   soc_narrow_req_t  [NrAXISlaves-1:0] periph_narrow_axi_req;
+@@ -170,8 +188,8 @@
+     FallThrough       : 1'b0,
+     LatencyMode       : axi_pkg::CUT_MST_PORTS,
+     PipelineStages    : 0,
+-    AxiIdWidthSlvPorts: AxiSocIdWidth,
+-    AxiIdUsedSlvPorts : AxiSocIdWidth,
++    AxiIdWidthSlvPorts: AxiIdWidth,
++    AxiIdUsedSlvPorts : AxiIdWidth,
+     UniqueIds         : 1'b0,
+     AxiAddrWidth      : AxiAddrWidth,
+     AxiDataWidth      : AxiWideDataWidth,
+@@ -181,6 +199,9 @@
+ 
+   axi_pkg::xbar_rule_64_t [NrAXISlaves-1:0] routing_rules;
+   assign routing_rules = '{
++`ifdef PROTON_DMA
++    '{idx: DMA, start_addr: DmaBase, end_addr: DmaBase + DmaLength},
++`endif
+ `ifdef PROTON_DDR
+     '{idx: DDR, start_addr: DDRBase, end_addr: DDRBase + DDRLength},
+ `endif
+@@ -212,8 +233,8 @@
+     .clk_i                (clk_i               ),
+     .rst_ni               (rst_ni              ),
+     .test_i               (1'b0                ),
+-    .slv_ports_req_i      (system_axi_req      ),
+-    .slv_ports_resp_o     (system_axi_resp     ),
++    .slv_ports_req_i      (master_req          ),
++    .slv_ports_resp_o     (master_resp         ),
+     .mst_ports_req_o      (periph_wide_axi_req ),
+     .mst_ports_resp_i     (periph_wide_axi_resp),
+     .addr_map_i           (routing_rules       ),
+@@ -523,6 +544,24 @@
+     .cmd_ready_o(matrix_cmd_ready), .done_o(matrix_done)
+   );
+ `endif
++`ifdef PROTON_DMA
++  soc_narrow_lite_req_t dma_lite_req;
++  soc_narrow_lite_resp_t dma_lite_resp;
++  axi_to_axi_lite #(
++    .AxiAddrWidth(AxiAddrWidth), .AxiDataWidth(64), .AxiIdWidth(AxiSocIdWidth),
++    .AxiUserWidth(AxiUserWidth), .AxiMaxReadTxns(1), .AxiMaxWriteTxns(1),
++    .FallThrough(1'b0), .full_req_t(soc_wide_req_t), .full_resp_t(soc_wide_resp_t),
++    .lite_req_t(soc_narrow_lite_req_t), .lite_resp_t(soc_narrow_lite_resp_t)
++  ) i_dma_axi_bridge (
++    .clk_i, .rst_ni, .test_i(1'b0), .slv_req_i(periph_wide_axi_req[DMA]),
++    .slv_resp_o(periph_wide_axi_resp[DMA]), .mst_req_o(dma_lite_req), .mst_resp_i(dma_lite_resp)
++  );
++  proton_dma #(.lite_req_t(soc_narrow_lite_req_t), .lite_resp_t(soc_narrow_lite_resp_t),
++    .axi_req_t(system_req_t), .axi_resp_t(system_resp_t)) i_dma (
++    .clk_i, .rst_ni, .cfg_req_i(dma_lite_req), .cfg_resp_o(dma_lite_resp),
++    .mem_req_o(master_req[1]), .mem_resp_i(master_resp[1])
++  );
++`endif
+   //////////////
+   //  System  //
+   //////////////
+@@ -552,6 +591,11 @@
+     cfg.NrNonIdempotentRules = 3;
+     cfg.NonIdempotentAddrBase = {UARTBase, CTRLBase, MatrixBase};
+     cfg.NonIdempotentLength = {UARTLength, CTRLLength, MatrixLength};
++`endif
++`ifdef PROTON_DMA
++    cfg.NrNonIdempotentRules = 4;
++    cfg.NonIdempotentAddrBase = {UARTBase, CTRLBase, MatrixBase, DmaBase};
++    cfg.NonIdempotentLength = {UARTLength, CTRLLength, MatrixLength, DmaLength};
+ `endif
+     cfg.NrExecuteRegionRules  = 3;
+     //                          DRAM;       Boot ROM;   Debug Module

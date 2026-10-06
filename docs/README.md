@@ -32,3 +32,5 @@ the hardware revision used for numerical verification.
 **[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**
 
 Every machine should think.
+
+- [Programmable DMA](dma.md): SRAM/DDR copy, transpose, register ABI and waveform verification.

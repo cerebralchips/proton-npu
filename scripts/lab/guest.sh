@@ -15,6 +15,9 @@ case "${1:-help}" in
   matrix-unit|matrix|matrix-wave|matrix-smoke|matrix-negative)
     exec python3 "$LAB_ROOT/scripts/lab/matrix.py" "$@"
     ;;
+  dma-build|dma-test|dma-unit)
+    exec python3 "$LAB_ROOT/scripts/lab/dma.py" "$@"
+    ;;
   ddr-build|ddr-test|ddr-unit)
     exec python3 "$LAB_ROOT/scripts/lab/ddr.py" "$@"
     ;;
