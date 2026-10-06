@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 769" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 870" role="img" aria-labelledby="title desc">
 <title id="title">Proton NPU system architecture</title>
-<desc id="desc">One ELF runs on the 64-bit RISC-V core. A command router directs RVV requests to the vector unit and custom matrix requests to the INT8 engine. The scalar core and vector unit access shared RAM through AXI; CPU scalar accesses load and read the matrix tile buffers.</desc>
+<desc id="desc">Proton SDK compiles an AI model into a bare-metal program for the 64-bit RISC-V core. A command router directs RVV requests to the vector unit and custom matrix requests to the INT8 engine. AXI connects the core and vector unit to 16 MiB internal SRAM and a 4 GiB functional external DDR model. The SDK places packed projection weights in DDR and working buffers in SRAM. The CPU feeds the matrix tile buffers through MMIO.</desc>
 <defs>
 <marker markerUnits="userSpaceOnUse" id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse">
 <path d="M0,0 L8,4 L0,8" fill="#1764d6"/>
@@ -12,11 +12,14 @@
 <path d="M0,0 L8,4 L0,8" fill="#ab6000"/>
 </marker>
 </defs>
-<rect width="1000" height="769" fill="white"/>
+<rect width="1000" height="870" fill="white"/>
 <g font-family="system-ui,-apple-system,Segoe UI,sans-serif" fill="#142b3a">
 <rect x="40" y="25" width="265" height="86" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
-<text x="58" y="57" font-size="21" fill="#1764d6" font-weight="650">One RISC-V ELF</text>
-<text x="58" y="86" font-size="15" fill="#142b3a" font-weight="400">Scalar + RVV + custom matrix</text>
+<text x="58" y="57" font-size="21" fill="#1764d6" font-weight="650">Proton SDK</text>
+<text x="58" y="80" font-size="14" fill="#142b3a" font-weight="400">AI model → bare-metal program</text>
+<text x="58" y="100" font-size="13" fill="#536979">Compile with IREE + LLVM</text>
+<text x="355" y="57" font-size="20" fill="#142b3a" font-weight="650">AI inference with SRAM + DDR</text>
+<text x="355" y="86" font-size="15" fill="#536979">Packed weights in DDR · working buffers in SRAM</text>
 <rect x="40" y="175" width="265" height="188" rx="12" fill="#f0f5ff" stroke="#1764d6" stroke-width="1.6"/>
 <text x="58" y="207" font-size="21" fill="#1764d6" font-weight="650">64-bit RISC-V core</text>
 <text x="58" y="236" font-size="15" fill="#142b3a" font-weight="400">1 × RV64 application core</text>
@@ -41,14 +44,22 @@
 <rect x="40" y="465" width="510" height="80" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
 <text x="58" y="497" font-size="21" fill="#087e8b" font-weight="650">64-bit AXI interconnect</text>
 <text x="58" y="526" font-size="15" fill="#142b3a" font-weight="400">Scalar + vector memory traffic</text>
-<rect x="40" y="615" width="245" height="80" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
-<text x="58" y="647" font-size="21" fill="#087e8b" font-weight="650">Simulated RAM</text>
-<text x="58" y="676" font-size="15" fill="#142b3a" font-weight="400">Programs + shared buffers</text>
-<rect x="315" y="615" width="235" height="80" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
-<text x="333" y="647" font-size="21" fill="#087e8b" font-weight="650">Control + UART</text>
-<text x="333" y="676" font-size="15" fill="#142b3a" font-weight="400">Exit status + console</text>
+<rect x="40" y="615" width="280" height="130" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
+<text x="58" y="647" font-size="21" fill="#087e8b" font-weight="650">Internal SRAM · 16 MiB</text>
+<text x="58" y="674" font-size="15">Code + working buffers</text>
+<text x="58" y="697" font-size="15">Activations, KV cache, heap, stack</text>
+<text x="58" y="725" font-size="13" fill="#536979">0x80000000 – 0x80ffffff</text>
+<rect x="350" y="615" width="300" height="130" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
+<text x="368" y="647" font-size="21" fill="#087e8b" font-weight="650">External DDR · 4 GiB</text>
+<text x="368" y="674" font-size="15">Packed INT8 projection weights</text>
+<text x="368" y="697" font-size="15">Uncached · functional model</text>
+<text x="368" y="725" font-size="13" fill="#536979">0x100000000 – 0x1ffffffff</text>
+<rect x="680" y="615" width="280" height="130" rx="12" fill="#eef8f8" stroke="#087e8b" stroke-width="1.6"/>
+<text x="698" y="647" font-size="21" fill="#087e8b" font-weight="650">Control + UART</text>
+<text x="698" y="674" font-size="15">Exit status + console</text>
+<text x="698" y="697" font-size="15">Test completion + output</text>
 <path d="M172 111 V175" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)"/>
-<text x="188" y="146" font-size="14" fill="#1764d6" font-weight="400">instructions</text>
+<text x="188" y="146" font-size="14" fill="#1764d6" font-weight="400">compiled program</text>
 <path d="M305 230 H355" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)" marker-start="url(#blue)"/>
 <path d="M580 220 H640" fill="none" stroke="#1764d6" stroke-width="2.5" marker-end="url(#blue)" marker-start="url(#blue)"/>
 <path d="M580 275 H610 V420 H640" fill="none" stroke="#ab6000" stroke-width="2.5" marker-end="url(#amber)" marker-start="url(#amber)" stroke-dasharray="7 5"/>
@@ -58,16 +69,19 @@
 <text x="626" y="337" font-size="14" fill="#087e8b" font-weight="400">Vector AXI master</text>
 <path d="M550 502 H640" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
 <text x="565" y="490" font-size="13" fill="#087e8b" font-weight="400">MMIO</text>
-<path d="M167 545 V615" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
-<path d="M430 545 V615" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
-<text x="640" y="605" font-size="15" fill="#1764d6" font-weight="600">Control path</text>
-<text x="640" y="632" font-size="15" fill="#087e8b" font-weight="600">Memory path</text>
-<text x="640" y="670" font-size="13" fill="#536979" font-weight="400">Crossing lines do not imply a junction.</text>
+<path d="M170 545 V615" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
+<path d="M340 545 V585 H500 V615" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
+<path d="M510 545 V565 H820 V615" fill="none" stroke="#087e8b" stroke-width="2.5" marker-end="url(#teal)" marker-start="url(#teal)"/>
+<text x="40" y="781" font-size="14" fill="#1764d6" font-weight="600">Control path</text>
+<text x="190" y="781" font-size="14" fill="#087e8b" font-weight="600">Memory path</text>
+<text x="345" y="781" font-size="14" fill="#ab6000" font-weight="600">Matrix commands</text>
+<text x="960" y="781" font-size="12" fill="#536979" text-anchor="end">Crossing lines do not imply a junction.</text>
+<text x="40" y="808" font-size="13" fill="#536979">SDK inference uses scalar + matrix; compiler-generated RVV is currently disabled. DDR is simulated, with no physical PHY.</text>
 </g>
 <g font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12" fill="#536979">
-<line x1="30" y1="729" x2="970" y2="729" stroke="#dbe4ea"/>
-<text x="30" y="753">Cerebral Chips · Proton NPU</text>
-<text x="500" y="753" font-size="12" fill="#536979" text-anchor="middle">Every machine should think.</text>
-<a href="https://www.cerebralchips.com"><text x="970" y="753" text-anchor="end">cerebralchips.com</text></a>
+<line x1="30" y1="829" x2="970" y2="829" stroke="#dbe4ea"/>
+<text x="30" y="853">Cerebral Chips · Proton NPU</text>
+<text x="500" y="853" font-size="12" fill="#536979" text-anchor="middle">Every machine should think.</text>
+<a href="https://www.cerebralchips.com"><text x="970" y="853" text-anchor="end">cerebralchips.com</text></a>
 </g>
 </svg>
