@@ -81,9 +81,11 @@ def build(trace=False):
     print(f'MATRIX BUILD PASS: {model(trace)}',flush=True)
     return dest
 
-def application(app='scalar_vector_matrix',trace=False,max_cycles=3000000,inject=False):
+def application(app='scalar_vector_matrix',trace=False,max_cycles=3000000,inject=False,
+                simulator=None,configuration='2_lanes + MATRIX_ENABLE'):
     dest=run_dir('matrix-wave' if trace else 'matrix-run-'+app)
-    result={'result':'INCOMPLETE','application':app,'configuration':'2_lanes + MATRIX_ENABLE',
+    sim = simulator or model(trace)
+    result={'result':'INCOMPLETE','application':app,'configuration':configuration,
             'sources':json.loads((ROOT/'sources.lock.json').read_text()),
             'rtl_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in SOURCES},
             'patch_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'patches').rglob('*.patch')}}
@@ -107,8 +109,8 @@ def application(app='scalar_vector_matrix',trace=False,max_cycles=3000000,inject
         shutil.copy2(elf,dest/'program.elf')
         shutil.copy2(ARA/'apps/bin'/f'{app}.dump',dest/'program.dump')
         result['elf_sha256']=hashlib.sha256(elf.read_bytes()).hexdigest()
-        result['simulator_sha256']=hashlib.sha256(model(trace).read_bytes()).hexdigest()
-        cmd=[model(trace),'-c',str(max_cycles)]
+        result['simulator_sha256']=hashlib.sha256(sim.read_bytes()).hexdigest()
+        cmd=[sim,'-c',str(max_cycles)]
         if trace: cmd+=['-t']
         text=logged([*cmd,'-l',f'ram,{elf},elf'],dest,dest/'rtl.log',timeout=300)
         result['rtl_cycles']=rtl_pass(text)

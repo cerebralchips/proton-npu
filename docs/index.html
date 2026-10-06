@@ -23,7 +23,7 @@
 <div class="nav-label">Project</div>
 <nav aria-label="Project resources"><a href="https://www.cerebralchips.com">Cerebral Chips website ↗</a><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
 </nav>
-</div><small>Initial hardware milestone<br>RV64 · RVV · INT8 matrix<br>Documentation: 4 October 2026</small>
+</div><small>Hardware + external-memory simulation<br>RV64 · RVV · INT8 matrix<br>Documentation: 6 October 2026</small>
 </aside>
 <main id="main">
 <header class="hero">
@@ -66,6 +66,7 @@
 </article>
 </div>
 <h2>Follow one workload</h2>
+<div class="callout"><p><strong>Optional SRAM + DDR target.</strong> Keep programs and working buffers in 16 MiB SRAM at <code>0x80000000</code>, with a separate 4 GiB external-memory region at <code>0x100000000</code>. The Verilator target supports CPU/vector accesses, high-address ELF loading, configurable delays and checked memory tests. This is a functional memory model; an FPGA or ASIC still needs a DDR controller and PHY. <a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/ddr-simulation.md">Memory map, commands and limits ↗</a>. IREE model deployment and packed-weight placement are maintained in <a href="https://github.com/cerebralchips/proton-sdk">Proton SDK ↗</a>.</p></div>
 <ol class="steps">
 <li><strong>Scalar setup:</strong> The scalar core prepares dimensions and pointers in ordinary C.</li>
 <li><strong>Vector preparation:</strong> explicit RVV intrinsics generate input-processing instructions for the vector unit.</li>

@@ -65,9 +65,10 @@ with every host package pinned.
 
 ## Patches and isolation
 
-Five [Ara patches](../patches/ara) repair waiver characters, Spike linker
+Six [Ara patches](../patches/ara) repair waiver characters, Spike linker
 subsections, decimal cycle reporting, testbench build dependencies, and add the
-matrix system integration. The [CVA6 patch](../patches/cva6) adds matrix instruction
+matrix system integration, plus the optional 64-bit-addressed DDR simulation
+target and loader. The [CVA6 patch](../patches/cva6) adds matrix instruction
 ordering and valid/ready accelerator accounting under `MATRIX_ENABLE`.
 Ara's required `tech_cells_generic` SRAM simulation patch is also applied.
 Matrix-disabled and matrix-enabled builds remain separate and selectable.

@@ -1,0 +1,402 @@
+{
+  "schema_version": 1,
+  "result": "PASS",
+  "date": "2026-10-06",
+  "target": "proton-v1-cva6-ara2-matrix-ddr-sim",
+  "hardware_base_revision": "a6e2dcd5bf95fff4879bf1e61a94cdc26bf59fd2",
+  "source_state": "local qualified changes on base revision; not committed or published",
+  "source_pins": {
+    "ara": {
+      "url": "https://github.com/pulp-platform/ara.git",
+      "commit": "34bd3bc152421b4601a7bf3d6e8e91ffb545c99e"
+    },
+    "cva6": {
+      "url": "https://github.com/pulp-platform/cva6.git",
+      "commit": "99eac9a649001bdf5b8f9da52e0ca73d5c48db1c"
+    },
+    "configuration": "2_lanes",
+    "lanes": 2,
+    "vlen_bits": 2048,
+    "llvm": {
+      "version": "20.1.0",
+      "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.0/LLVM-20.1.0-Linux-ARM64.tar.xz",
+      "sha256": "9d1bbf3f6d4d011e3b8b4b585f686bc968474917f37d3b82b4a534f456168c67"
+    },
+    "bender": {
+      "version": "0.31.0",
+      "url": "https://github.com/pulp-platform/bender/releases/download/v0.31.0/bender-0.31.0-arm64-linux-gnu-ubuntu24.04.tar.gz",
+      "sha256": "117af7701628db067fb3b4c34b5ab0bcead77102ef378aacbb8e8bf4887131bf"
+    },
+    "verilator": {
+      "commit": "06263ec724e7bf1fb0a0366b3aec54cd431c51d6"
+    },
+    "spike": {
+      "commit": "204b88deda9bcb7537bc09ae5c320f691e8839ef"
+    },
+    "c_runtime": {
+      "provider": "GCC 13.1.0 / Newlib 4.3.0 RV64 LP64D; reuse ARA_GCC_ROOT or build with matched CVA6 recipe",
+      "recipe": "upstream/ara/hardware/deps/cva6/util/toolchain-builder/config/gcc-13.1.0-baremetal.sh",
+      "usage": "sysroot and libgcc for LLVM; adaptation from Ara's Newlib/compiler-rt recipe"
+    },
+    "matrix": {
+      "configuration": "2_lanes + MATRIX_ENABLE",
+      "quadrilatero": {
+        "url": "https://github.com/pulp-platform/quadrilatero.git",
+        "commit": "4e4f41520d0784ecb750a22d0715d5a22cca8e26",
+        "license": "Apache-2.0 WITH SHL-2.1"
+      },
+      "mesh": [
+        4,
+        4
+      ],
+      "packed_int8_products_per_pe": 4,
+      "tile_k": 16,
+      "mmio_base": "0xe0000000",
+      "custom_opcode": "0x2b (custom-1)"
+    },
+    "lima": {
+      "version": "2.2.0",
+      "url": "https://github.com/lima-vm/lima/releases/download/v2.2.0/lima-2.2.0-Darwin-arm64.tar.gz",
+      "sha256": "bbdef91774885a0d05f7b048c4eb89ae2bcf3a0c252ae7ca7934e63df76d93c3"
+    }
+  },
+  "source_sha256": {
+    "examples/ddr_memory/main.c": "d6b10d98e88e828171c38aeb01b29f58e7cb8207bb6850d928589c82dacc8484",
+    "examples/ddr_memory/traps.S": "ca65cce1809fb772ff9ef67e3f45d6823ed9d7078107cfb50fb1d03f5d3e2445",
+    "hardware/memory/proton_ddr_sim.sv": "4e7223044020de81630a13c17a42929d56cadb7559d3db8b253e858e37542e32",
+    "patches/ara/0001-remove-invalid-waiver-characters.patch": "3df3618caab9adc59f8da4799784bd88e552d4042b15d9c0438e8a40f02c4aa3",
+    "patches/ara/0002-spike-linker-sections.patch": "70211a0248c2bc0aa9c6c77e50887aafe828b96bfa33129b1c83b2d1338b1bf1",
+    "patches/ara/0003-decimal-cycle-statistics.patch": "11c8ae9e512f7183b33b00fb285c8bd08a02ed47ac32258146f2c504fba9bb09",
+    "patches/ara/0004-track-testbench-build-inputs.patch": "17442599ba6a4a00d544354774f63f93ff32b0508ad616371a5e0dc46c03e2aa",
+    "patches/ara/0005-matrix-integration.patch": "e6570acc91f3520c5beb631d8040c484be18ef02b9e450bfffc6ba3db69eca54",
+    "patches/ara/0006-functional-ddr.patch": "b4cf15c04be36f49004ebd22097d6214d161a05beec90da1a4905ad4fe6eddf6",
+    "patches/cva6/0001-matrix-serialization.patch": "63e44196b35bf85790fdb022b20407bad191709741d8ef5c17aab1eb0944e5be",
+    "scripts/ara": "29037ad84ad0cab50b4ed384ffaee451a33017b74151eb43c2337a4b2641046d",
+    "scripts/lab/apply-patches.sh": "5897883c0af010a8446b1e2d20aea85f3c76289ddda4aa0392ad6604838c0ec7",
+    "scripts/lab/apply-stack.py": "652e49256f0652b266116578db5aaac6d63ce6110079da19189884425b073a38",
+    "scripts/lab/ddr-wave.py": "50f37cc3d29b86f61477528b31737ba0a4b5d855cd6ca7bea88d17885eb014a2",
+    "scripts/lab/ddr.py": "f796be4c1388198ff7bdc92841dc22654ea5d4dd87bf9baa625f3518be300267",
+    "scripts/lab/guest.sh": "10362c49648d2c1bf4dfe6f53ac1791f88d0c2d49f1cc87a295c25ad171f815d",
+    "scripts/lab/matrix.py": "d93ba2f1558d40ec73b1fde529e172f24b61e8e53b0ff737ab2006abc1585938",
+    "tests/memory/ddr_tb.sv": "043f3061370716175050d6cbf735b812584b968212ed103bbda9bbc6d6d96449",
+    "tests/memory/elf_image.py": "535cb667baef35bc5f013031b159827048453350b66b6a07b73a81fe252aa420"
+  },
+  "commands": [
+    "./scripts/ara ddr-test",
+    "./scripts/ara matrix-smoke",
+    "./scripts/ara matrix-negative",
+    "./scripts/ara smoke",
+    "python3 tests/repository/check.py"
+  ],
+  "artifacts": {
+    "result": "PASS",
+    "unit": "artifacts/20261006T032019Z-ddr-unit-90sznvl4",
+    "loader": "artifacts/20261006T032023Z-ddr-loader-negative-zej_pioy",
+    "combined_matrix": "artifacts/20261006T032121Z-matrix-run-scalar_vector_matrix-ekxzmxur",
+    "runs": [
+      "artifacts/20261006T032024Z-ddr-l1-s0-fiigl53h",
+      "artifacts/20261006T032031Z-ddr-l7-s3-wave-_hrw2420"
+    ]
+  },
+  "fast": {
+    "result": "PASS",
+    "validation": "CVA6 + Ara + matrix RTL",
+    "sram_base": "0x80000000",
+    "sram_bytes": 16777216,
+    "ddr_base": "0x100000000",
+    "ddr_bytes": 4294967296,
+    "ddr_latency": 1,
+    "ddr_stall": 0,
+    "trace": false,
+    "coverage": "sampled full address range; not an exhaustive byte sweep",
+    "elf_sha256": "a2de49dbdc40f42db2520591bba685cb57ae3df830d23da98eefe2a3e4eaf515",
+    "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+    "sources_sha256": {
+      "hardware/memory/proton_ddr_sim.sv": "4e7223044020de81630a13c17a42929d56cadb7559d3db8b253e858e37542e32",
+      "patches/ara/0001-remove-invalid-waiver-characters.patch": "3df3618caab9adc59f8da4799784bd88e552d4042b15d9c0438e8a40f02c4aa3",
+      "patches/ara/0002-spike-linker-sections.patch": "70211a0248c2bc0aa9c6c77e50887aafe828b96bfa33129b1c83b2d1338b1bf1",
+      "patches/ara/0003-decimal-cycle-statistics.patch": "11c8ae9e512f7183b33b00fb285c8bd08a02ed47ac32258146f2c504fba9bb09",
+      "patches/ara/0004-track-testbench-build-inputs.patch": "17442599ba6a4a00d544354774f63f93ff32b0508ad616371a5e0dc46c03e2aa",
+      "patches/ara/0005-matrix-integration.patch": "e6570acc91f3520c5beb631d8040c484be18ef02b9e450bfffc6ba3db69eca54",
+      "patches/ara/0006-functional-ddr.patch": "b4cf15c04be36f49004ebd22097d6214d161a05beec90da1a4905ad4fe6eddf6",
+      "patches/cva6/0001-matrix-serialization.patch": "63e44196b35bf85790fdb022b20407bad191709741d8ef5c17aab1eb0944e5be",
+      "examples/ddr_memory/main.c": "d6b10d98e88e828171c38aeb01b29f58e7cb8207bb6850d928589c82dacc8484",
+      "examples/ddr_memory/traps.S": "ca65cce1809fb772ff9ef67e3f45d6823ed9d7078107cfb50fb1d03f5d3e2445"
+    },
+    "rtl_cycles": 281762
+  },
+  "delayed": {
+    "result": "PASS",
+    "validation": "CVA6 + Ara + matrix RTL",
+    "sram_base": "0x80000000",
+    "sram_bytes": 16777216,
+    "ddr_base": "0x100000000",
+    "ddr_bytes": 4294967296,
+    "ddr_latency": 7,
+    "ddr_stall": 3,
+    "trace": true,
+    "coverage": "sampled full address range; not an exhaustive byte sweep",
+    "elf_sha256": "a2de49dbdc40f42db2520591bba685cb57ae3df830d23da98eefe2a3e4eaf515",
+    "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+    "sources_sha256": {
+      "hardware/memory/proton_ddr_sim.sv": "4e7223044020de81630a13c17a42929d56cadb7559d3db8b253e858e37542e32",
+      "patches/ara/0001-remove-invalid-waiver-characters.patch": "3df3618caab9adc59f8da4799784bd88e552d4042b15d9c0438e8a40f02c4aa3",
+      "patches/ara/0002-spike-linker-sections.patch": "70211a0248c2bc0aa9c6c77e50887aafe828b96bfa33129b1c83b2d1338b1bf1",
+      "patches/ara/0003-decimal-cycle-statistics.patch": "11c8ae9e512f7183b33b00fb285c8bd08a02ed47ac32258146f2c504fba9bb09",
+      "patches/ara/0004-track-testbench-build-inputs.patch": "17442599ba6a4a00d544354774f63f93ff32b0508ad616371a5e0dc46c03e2aa",
+      "patches/ara/0005-matrix-integration.patch": "e6570acc91f3520c5beb631d8040c484be18ef02b9e450bfffc6ba3db69eca54",
+      "patches/ara/0006-functional-ddr.patch": "b4cf15c04be36f49004ebd22097d6214d161a05beec90da1a4905ad4fe6eddf6",
+      "patches/cva6/0001-matrix-serialization.patch": "63e44196b35bf85790fdb022b20407bad191709741d8ef5c17aab1eb0944e5be",
+      "examples/ddr_memory/main.c": "d6b10d98e88e828171c38aeb01b29f58e7cb8207bb6850d928589c82dacc8484",
+      "examples/ddr_memory/traps.S": "ca65cce1809fb772ff9ef67e3f45d6823ed9d7078107cfb50fb1d03f5d3e2445"
+    },
+    "rtl_cycles": 384130
+  },
+  "unit": {
+    "result": "PASS"
+  },
+  "loader_rejections": {
+    "result": "PASS",
+    "checks": [
+      {
+        "case": "below-ddr",
+        "result": "PASS rejected before execution"
+      },
+      {
+        "case": "above-ddr",
+        "result": "PASS rejected before execution"
+      },
+      {
+        "case": "cross-ddr-end",
+        "result": "PASS rejected before execution"
+      },
+      {
+        "case": "above-sram",
+        "result": "PASS rejected before execution"
+      },
+      {
+        "case": "overflow",
+        "result": "PASS rejected before execution"
+      },
+      {
+        "case": "file-exceeds-memory",
+        "result": "PASS rejected before execution"
+      }
+    ]
+  },
+  "combined_matrix": {
+    "result": "PASS",
+    "rtl_cycles": 115650,
+    "configuration": "2_lanes + MATRIX_ENABLE + PROTON_DDR",
+    "execution": {
+      "cases": [
+        [
+          0,
+          4,
+          4,
+          4,
+          44
+        ],
+        [
+          1,
+          8,
+          8,
+          8,
+          4294861612
+        ],
+        [
+          2,
+          4,
+          4,
+          16,
+          4294923247
+        ],
+        [
+          3,
+          5,
+          7,
+          19,
+          86497
+        ],
+        [
+          4,
+          3,
+          2,
+          0,
+          18
+        ],
+        [
+          5,
+          1,
+          1,
+          1,
+          4294961443
+        ],
+        [
+          6,
+          9,
+          5,
+          33,
+          4294963102
+        ],
+        [
+          7,
+          4,
+          4,
+          16,
+          4194352
+        ]
+      ],
+      "retired_instructions": {
+        "scalar": 69007,
+        "vector": 64,
+        "mzero": 52,
+        "mmacc": 34
+      },
+      "matrix_zero": 52,
+      "matrix_macc": 34,
+      "matched_issue_done_response": 86,
+      "oracle": "Python integer matmul + scalar C per-element checks",
+      "instruction_trace": "instructions.csv",
+      "events": "matrix-events.csv"
+    }
+  },
+  "regressions": {
+    "baseline": {
+      "result": "PASS",
+      "passed": 9,
+      "artifact": "artifacts/20261006T031419Z-smoke-2gsb6f7b/summary.json",
+      "tests": [
+        {
+          "test": "rv64ui-ara-add",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T031419Z-run-rv64ui-ara-add-anggsteh"
+        },
+        {
+          "test": "rv64um-ara-mul",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T031419Z-run-rv64um-ara-mul-kfzpedj3"
+        },
+        {
+          "test": "rv64uv-ara-vsetvli",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T031420Z-run-rv64uv-ara-vsetvli-vbuzzohy"
+        },
+        {
+          "test": "rv64uv-ara-vadd",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T031422Z-run-rv64uv-ara-vadd-zg4yfhki"
+        },
+        {
+          "test": "rv64uv-ara-vmul",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T031425Z-run-rv64uv-ara-vmul-jxtpba99"
+        },
+        {
+          "test": "rv64uv-ara-vredsum",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T031426Z-run-rv64uv-ara-vredsum-3samjb7e"
+        },
+        {
+          "test": "rv64uv-ara-vle32",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T031428Z-run-rv64uv-ara-vle32-e1m17syn"
+        },
+        {
+          "test": "rv64uv-ara-vse32",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T031430Z-run-rv64uv-ara-vse32-uyy64qjh"
+        },
+        {
+          "test": "rv64uv-ara-vfadd",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T031433Z-run-rv64uv-ara-vfadd-5pwr0q5l"
+        }
+      ]
+    },
+    "matrix": {
+      "result": "PASS",
+      "passed": 9,
+      "artifact": "artifacts/20261006T030542Z-matrix-smoke-3qo4h0r8/summary.json",
+      "tests": [
+        {
+          "test": "rv64ui-ara-add",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T030542Z-matrix-run-rv64ui-ara-add-qlx63ft1"
+        },
+        {
+          "test": "rv64um-ara-mul",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T030543Z-matrix-run-rv64um-ara-mul-em_49y6c"
+        },
+        {
+          "test": "rv64uv-ara-vsetvli",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T030544Z-matrix-run-rv64uv-ara-vsetvli-iswktau1"
+        },
+        {
+          "test": "rv64uv-ara-vadd",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T030545Z-matrix-run-rv64uv-ara-vadd-th1ycyaj"
+        },
+        {
+          "test": "rv64uv-ara-vmul",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T030548Z-matrix-run-rv64uv-ara-vmul-bk2npbee"
+        },
+        {
+          "test": "rv64uv-ara-vredsum",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T030550Z-matrix-run-rv64uv-ara-vredsum-a0dtb0i4"
+        },
+        {
+          "test": "rv64uv-ara-vle32",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T030552Z-matrix-run-rv64uv-ara-vle32-bcb8hql4"
+        },
+        {
+          "test": "rv64uv-ara-vse32",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T030554Z-matrix-run-rv64uv-ara-vse32-8na03u3p"
+        },
+        {
+          "test": "rv64uv-ara-vfadd",
+          "result": "PASS",
+          "evidence": "artifacts/20261006T030556Z-matrix-run-rv64uv-ara-vfadd-velawziu"
+        }
+      ]
+    }
+  },
+  "negative_gates": {
+    "result": "PASS",
+    "checks": [
+      {
+        "test": "wrong-result",
+        "result": "PASS: intended failure rejected",
+        "evidence": "artifacts/20261006T030605Z-matrix-run-scalar_vector_matrix-lvb3i9gj"
+      },
+      {
+        "test": "cycle-timeout",
+        "result": "PASS: intended failure rejected",
+        "evidence": "artifacts/20261006T030607Z-matrix-run-scalar_vector_matrix-ov24ckv3"
+      }
+    ]
+  },
+  "failed_attempts": [
+    {
+      "artifact": "artifacts/20261006T025845Z-ddr-l1-s0-edoe27ae",
+      "reason": "upstream CLI argument permutation; corrected using attached --load-elf=FILE"
+    },
+    {
+      "artifact": "artifacts/20261006T025947Z-ddr-l1-s0-hrrzbjcm",
+      "reason": "expected CPU access traps absent; pinned CVA6 does not propagate ordinary AXI errors. Final boundary gate verifies AXI DECERR directly."
+    }
+  ],
+  "limits": [
+    "Functional external memory; no DDR PHY or calibrated DDR timing",
+    "4096 MiB-spaced sample locations plus directed probes; not exhaustive all-byte validation",
+    "DDR is uncached and non-executable; atomics unsupported",
+    "AXI boundary errors verified; CPU load/store access exceptions not implemented by the pinned cache adapter",
+    "SDK unchanged; model deployment not part of this step"
+  ]
+}

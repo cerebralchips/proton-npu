@@ -1,0 +1,387 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-06",
+  "result": "PASS requested bounded transfer checks",
+  "target": "CVA6 + Ara (2 lanes, VLEN 2048) + matrix + functional DDR",
+  "hardware_changed_for_sweeps": false,
+  "full_4gib_completed": false,
+  "commands": [
+    "./scripts/ara ddr-sweep-smoke"
+  ],
+  "summary_artifact": "artifacts/20261006T040245Z-ddr-sweep-summary-f_3vos0_/result.json",
+  "sram_bytes": 16777216,
+  "full_mode_sram_stage_bytes": 14680064,
+  "bounded_stage_bytes": 4096,
+  "initialization": "Scalar stores, all input filled before any transfer",
+  "oracle": "Independent scalar formula/loads check every output word; FST checks each accepted DDR read and write pattern",
+  "source_sha256": {
+    "examples/ddr_sweep/main.c": "e4034e600ac6c6fff2c08ba679046dbf01ea3d802c0e16ef00332950a2af8078",
+    "examples/ddr_sweep/init.S": "55e14364930cc1ae9a7841e3a8abd285f6cdbef8fe67d8002c25db70b2f96311",
+    "scripts/lab/ddr-sweep.py": "e94ad7e70da5626bcf3e44084132535323809eefe4336eb3e0bb8203a490419d",
+    "scripts/lab/ddr-wave.py": "f0301d0e64bdbbb29b4ed92f89275d0de290cec8227808ec9df896729ab7dd8f",
+    "hardware/memory/proton_ddr_sim.sv": "4e7223044020de81630a13c17a42929d56cadb7559d3db8b253e858e37542e32",
+    "patches/ara/0006-functional-ddr.patch": "b4cf15c04be36f49004ebd22097d6214d161a05beec90da1a4905ad4fe6eddf6"
+  },
+  "runs": [
+    {
+      "result": "PASS",
+      "mode": "direct",
+      "bytes": 65560,
+      "offset": 0,
+      "stage_bytes": 0,
+      "stage_base": "0x80100000",
+      "ddr_start": "0x100000000",
+      "ddr_latency": 1,
+      "ddr_stall": 0,
+      "trace": false,
+      "injected_failure": false,
+      "full_4gib_completed": false,
+      "initialization": "scalar",
+      "validation": "Real CVA6 + two-lane Ara + matrix RTL; dense range, scalar oracle",
+      "elf_sha256": "53c1b7913d16a59e738ad362e32cce9c6f17c6e32a86d94a72cdef0bc83d606d",
+      "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+      "cycle_limit": 2376760,
+      "timeout_seconds": 600,
+      "wall_seconds": 5.452983816998312,
+      "rtl_cycles": 245298,
+      "chunks": 1,
+      "phase_cycles": {
+        "init": 49258,
+        "transfer": 37710,
+        "verify": 147613
+      },
+      "artifact": "artifacts/20261006T035936Z-ddr-sweep-direct-ioe13glr"
+    },
+    {
+      "result": "PASS",
+      "mode": "direct",
+      "bytes": 65560,
+      "offset": 4294901736,
+      "stage_bytes": 0,
+      "stage_base": "0x80eff000",
+      "ddr_start": "0x1fffeffe8",
+      "ddr_latency": 7,
+      "ddr_stall": 3,
+      "trace": true,
+      "injected_failure": false,
+      "full_4gib_completed": false,
+      "initialization": "scalar",
+      "validation": "Real CVA6 + two-lane Ara + matrix RTL; dense range, scalar oracle",
+      "elf_sha256": "66b09defc3607d9dc9862cddd59b49d810fe0b713f2e28f2839c614d899d1aba",
+      "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+      "cycle_limit": 2966800,
+      "timeout_seconds": 600,
+      "wall_seconds": 24.971829387999605,
+      "rtl_cycles": 481424,
+      "chunks": 1,
+      "phase_cycles": {
+        "init": 90213,
+        "transfer": 183677,
+        "verify": 196798
+      },
+      "waveform": {
+        "result": "PASS",
+        "reads_checked": 16391,
+        "writes_checked": 16391,
+        "touched_mib_regions": 1,
+        "min_address": "0x1fffeffe0",
+        "max_address": "0x1fffffff8",
+        "memory_response_cycles": [
+          8
+        ],
+        "request_backpressure_cycles": 72210,
+        "byte_strobes": [
+          255
+        ],
+        "axi_read_beats": 16980,
+        "axi_write_responses": 8969,
+        "boundary_read_decerr": [],
+        "boundary_write_decerr": [],
+        "exhaustive_byte_sweep": false,
+        "dense_bytes_checked": 65560,
+        "mode": "direct",
+        "per_word_reads": 2,
+        "per_word_writes": 2,
+        "independent_write_pattern_checked": true
+      },
+      "artifact": "artifacts/20261006T035942Z-ddr-sweep-direct-wf4wyt01",
+      "fst_sha256": "d388263415a11488709f915bc1c1164a83f59022099281b9b4868b5b4d272ac9"
+    },
+    {
+      "result": "PASS (expected corruption detected)",
+      "mode": "direct",
+      "bytes": 1048,
+      "offset": 4294966248,
+      "stage_bytes": 0,
+      "stage_base": "0x80100000",
+      "ddr_start": "0x1fffffbe8",
+      "ddr_latency": 1,
+      "ddr_stall": 0,
+      "trace": false,
+      "injected_failure": true,
+      "full_4gib_completed": false,
+      "initialization": "scalar",
+      "validation": "Real CVA6 + two-lane Ara + matrix RTL; dense range, scalar oracle",
+      "elf_sha256": "0b2b4bf4bfdeeab9799c403866999a915983fd4968a9f81c1dea2b447278bee1",
+      "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+      "cycle_limit": 1022008,
+      "timeout_seconds": 600,
+      "wall_seconds": 0.49829812900861725,
+      "artifact": "artifacts/20261006T040029Z-ddr-sweep-direct-negative-jxd1ore2"
+    },
+    {
+      "result": "PASS",
+      "mode": "staged",
+      "bytes": 65560,
+      "offset": 0,
+      "stage_bytes": 4096,
+      "stage_base": "0x80100000",
+      "ddr_start": "0x100000000",
+      "ddr_latency": 1,
+      "ddr_stall": 0,
+      "trace": false,
+      "injected_failure": false,
+      "full_4gib_completed": false,
+      "initialization": "scalar",
+      "validation": "Real CVA6 + two-lane Ara + matrix RTL; dense range, scalar oracle",
+      "elf_sha256": "0c976577d6a5de723f0aca7fa12db88e7163e7168a74c547114b4ec2aaa5e1f6",
+      "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+      "cycle_limit": 2376760,
+      "timeout_seconds": 600,
+      "wall_seconds": 8.292637408987503,
+      "rtl_cycles": 357631,
+      "chunks": 17,
+      "phase_cycles": {
+        "init": 41057,
+        "transfer": 158026,
+        "verify": 147589
+      },
+      "artifact": "artifacts/20261006T040030Z-ddr-sweep-staged-kstezvgs"
+    },
+    {
+      "result": "PASS",
+      "mode": "staged",
+      "bytes": 65560,
+      "offset": 4294901736,
+      "stage_bytes": 4096,
+      "stage_base": "0x80eff000",
+      "ddr_start": "0x1fffeffe8",
+      "ddr_latency": 7,
+      "ddr_stall": 3,
+      "trace": true,
+      "injected_failure": false,
+      "full_4gib_completed": false,
+      "initialization": "scalar",
+      "validation": "Real CVA6 + two-lane Ara + matrix RTL; dense range, scalar oracle",
+      "elf_sha256": "00db1d50f2b5761be0098ee9bdee30ad1933c6d1bc248a6821ba5069e34359ea",
+      "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+      "cycle_limit": 2966800,
+      "timeout_seconds": 600,
+      "wall_seconds": 35.39664930899744,
+      "rtl_cycles": 602624,
+      "chunks": 17,
+      "phase_cycles": {
+        "init": 90223,
+        "transfer": 304570,
+        "verify": 196787
+      },
+      "waveform": {
+        "result": "PASS",
+        "reads_checked": 16391,
+        "writes_checked": 16391,
+        "touched_mib_regions": 1,
+        "min_address": "0x1fffeffe0",
+        "max_address": "0x1fffffff8",
+        "memory_response_cycles": [
+          8
+        ],
+        "request_backpressure_cycles": 72210,
+        "byte_strobes": [
+          255
+        ],
+        "axi_read_beats": 33865,
+        "axi_write_responses": 9315,
+        "boundary_read_decerr": [],
+        "boundary_write_decerr": [],
+        "exhaustive_byte_sweep": false,
+        "dense_bytes_checked": 65560,
+        "mode": "staged",
+        "per_word_reads": 2,
+        "per_word_writes": 2,
+        "independent_write_pattern_checked": true
+      },
+      "artifact": "artifacts/20261006T040039Z-ddr-sweep-staged-wd0f6d9l",
+      "fst_sha256": "df3940f9a03e184a212ec38ce36b7c808c64b321afc1e714b40c551f5e35031a"
+    },
+    {
+      "result": "PASS (expected corruption detected)",
+      "mode": "staged",
+      "bytes": 1048,
+      "offset": 4294966248,
+      "stage_bytes": 256,
+      "stage_base": "0x80100000",
+      "ddr_start": "0x1fffffbe8",
+      "ddr_latency": 1,
+      "ddr_stall": 0,
+      "trace": false,
+      "injected_failure": true,
+      "full_4gib_completed": false,
+      "initialization": "scalar",
+      "validation": "Real CVA6 + two-lane Ara + matrix RTL; dense range, scalar oracle",
+      "elf_sha256": "c8fbea8deab8dd2559cafd8dc88e6ab38e614d527a213914a223eb94f32c762c",
+      "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+      "cycle_limit": 1022008,
+      "timeout_seconds": 600,
+      "wall_seconds": 0.4381665300024906,
+      "artifact": "artifacts/20261006T040147Z-ddr-sweep-staged-negative-tpca40rf"
+    },
+    {
+      "result": "PASS",
+      "mode": "direct",
+      "bytes": 262168,
+      "offset": 0,
+      "stage_bytes": 0,
+      "stage_base": "0x80100000",
+      "ddr_start": "0x100000000",
+      "ddr_latency": 1,
+      "ddr_stall": 0,
+      "trace": false,
+      "injected_failure": false,
+      "full_4gib_completed": false,
+      "initialization": "scalar",
+      "validation": "Real CVA6 + two-lane Ara + matrix RTL; dense range, scalar oracle",
+      "elf_sha256": "2e302d3f18176a559ca4fa74002637eab739ab18dcee2223565420904b6e9d8c",
+      "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+      "cycle_limit": 6505528,
+      "timeout_seconds": 600,
+      "wall_seconds": 21.987037094993866,
+      "rtl_cycles": 915662,
+      "chunks": 1,
+      "phase_cycles": {
+        "init": 163933,
+        "transfer": 150606,
+        "verify": 589983
+      },
+      "artifact": "artifacts/20261006T040148Z-ddr-sweep-direct-b9sc08pc"
+    },
+    {
+      "result": "PASS",
+      "mode": "staged",
+      "bytes": 262168,
+      "offset": 0,
+      "stage_bytes": 4096,
+      "stage_base": "0x80100000",
+      "ddr_start": "0x100000000",
+      "ddr_latency": 1,
+      "ddr_stall": 0,
+      "trace": false,
+      "injected_failure": false,
+      "full_4gib_completed": false,
+      "initialization": "scalar",
+      "validation": "Real CVA6 + two-lane Ara + matrix RTL; dense range, scalar oracle",
+      "elf_sha256": "69c8562b515e33b9bba280a8bfb4d0b1fb9d0c65a82a914e4fd00064f3f9b758",
+      "simulator_sha256": "be3c38af7cd30aaa454e2c7cc89333d23ff333f819b44a9e11a269c66a8807fc",
+      "cycle_limit": 6505528,
+      "timeout_seconds": 600,
+      "wall_seconds": 33.61926073700306,
+      "rtl_cycles": 1429172,
+      "chunks": 65,
+      "phase_cycles": {
+        "init": 196714,
+        "transfer": 631067,
+        "verify": 589951
+      },
+      "artifact": "artifacts/20261006T040211Z-ddr-sweep-staged-_ikurk2k"
+    }
+  ],
+  "full_4gib_estimates": {
+    "direct": {
+      "sample_bytes": 262168,
+      "sample_wall_seconds": 21.987037094993866,
+      "projected_cycles": 14818331789,
+      "projected_hours": 98.83899746097335
+    },
+    "staged": {
+      "sample_bytes": 262168,
+      "sample_wall_seconds": 33.61926073700306,
+      "projected_cycles": 23225994685,
+      "projected_hours": 151.7663473793136
+    }
+  },
+  "estimate_limits": "Linear extrapolation, not a completed 4 GiB run. The current per-word associative DDR storage consumes much more than 4 GiB host RAM when full; the 8 GiB VM is insufficient. Paging or a larger host is needed. Large-map lookup, allocation and SRAM chunk size can change runtime. No physical DDR performance claim.",
+  "open_findings": [
+    {
+      "result": "UNRESOLVED",
+      "finding": "Optional vector input-generation sequence stalls after two completed 256-byte stores",
+      "sequence": "vid.v -> vadd.vx -> vxor.vx -> vse64.v, repeated in v8",
+      "artifact": "artifacts/20261006T040333Z-ddr-sweep-direct-7c97jho_",
+      "original_artifact": "artifacts/20261006T033621Z-ddr-sweep-direct-53bt9lat",
+      "command": "./scripts/ara ddr-sweep --mode direct --bytes 65560 --vector-init --max-cycles 20000 --trace",
+      "rtl_cycles_before_timeout": 20000,
+      "ddr_reads": 0,
+      "ddr_writes": 65,
+      "elf_sha256": "f5229b40dd095e7bdf9ab2abbd308300a6fbfa97d58d3a921b6eee2d8c332281",
+      "same_elf_as_original_failure": true,
+      "diagnostic_wave_artifact": "artifacts/20261006T033755Z-ddr-sweep-debug-ltw4tpcg",
+      "observations": {
+        "ddr_mem_req": 0,
+        "ddr_mem_gnt": 1,
+        "ddr_pending": 0,
+        "vector_store_pending": 1,
+        "vector_store_operand_valid": 0
+      },
+      "qualification": "Passing transfer tests use scalar initialization. This producer sequence is not qualified; root cause not determined."
+    }
+  ],
+  "full_configuration_compile": {
+    "artifact": "artifacts/20261006T040404Z-ddr-sweep-full-compile-dga7gifp",
+    "result": "PASS compile only; not executed",
+    "checks": [
+      {
+        "mode": "direct",
+        "bytes": 4294967296,
+        "stage_bytes": 0,
+        "elf_sha256": "bff5f7d9249ba75d7fce96634892816db3d8ce1336bd23779459ea4b12e5cde2"
+      },
+      {
+        "mode": "staged",
+        "bytes": 4294967296,
+        "stage_bytes": 14680064,
+        "elf_sha256": "7bfc7b43da9f9f756d9c511ec2db70268ffa7581d0aba06467e814d9e5a57f92"
+      }
+    ]
+  },
+  "failed_harness_attempts": [
+    {
+      "artifact": "artifacts/20261006T033920Z-ddr-sweep-direct-d9ct2m_u",
+      "reason": "RTL passed; checker initially required unrelated shared-port completion MMIO to finish. Restrict outstanding-request gate to DDR/boundary transactions."
+    },
+    {
+      "artifact": "artifacts/20261006T034055Z-ddr-sweep-direct-negative-krcvbb83",
+      "reason": "Expected corruption caught in RTL; harness initially rejected expected nonzero process status. Now requires exact diagnostic, address, and expected exit code."
+    }
+  ],
+  "limits": [
+    "No complete 4 GiB execution; bounded range coverage only.",
+    "Bounded runs reuse 4 KiB SRAM; 14 MiB staging configuration compiled but not swept.",
+    "The optional vector initialization sequence remains stalled; no broad RTL correctness claim.",
+    "Functional external memory model; no physical DDR controller, PHY, timing or bandwidth qualification.",
+    "SDK unchanged."
+  ],
+  "existing_waveform_recheck": {
+    "result": "PASS",
+    "artifact": "artifacts/20261006T040405Z-ddr-old-wave-recheck-9p662m_d",
+    "reads_checked": 8637,
+    "writes_checked": 8428,
+    "boundary_read_decerr": [
+      "0x81000000",
+      "0xfffffff8",
+      "0x200000000"
+    ],
+    "boundary_write_decerr": [
+      "0x81000000",
+      "0xfffffff8",
+      "0x200000000"
+    ]
+  }
+}

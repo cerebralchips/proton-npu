@@ -18,7 +18,14 @@ The HTML pages use only local CSS and SVG assets.
 Technical notes: [setup](environment.md), [first lesson](lesson.md),
 [waveforms](waveforms.md), [matrix design contract](matrix-design.md),
 [matrix commands](matrix-running.md), [status](status.md),
+[SRAM + DDR simulation and timed examples](ddr-simulation.md),
 and [portable verification records](../verification/README.md).
+
+The optional DDR target exposes 16 MiB internal SRAM and 4 GiB external functional
+memory to both CPU and vector loads/stores. Physical FPGA/ASIC DDR requires a
+controller and PHY. Model deployment and compiler/runtime placement live in
+[proton-sdk](https://github.com/cerebralchips/proton-sdk); its target manifest pins
+the hardware revision used for numerical verification.
 
 ---
 

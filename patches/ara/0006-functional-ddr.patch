@@ -1,0 +1,259 @@
+--- a/Bender.yml
++++ b/Bender.yml
+@@ -38,6 +38,10 @@
+         - hardware/src/matrix/matrix_tile.sv
+         - hardware/src/matrix/matrix_axi_lite.sv
+         - hardware/src/matrix/matrix_router.sv
++
++    - target: proton_ddr
++      files:
++        - hardware/src/memory/proton_ddr_sim.sv
+ 
+     # Sources
+     # Level 0
+--- a/hardware/Makefile
++++ b/hardware/Makefile
+@@ -110,11 +110,17 @@
+ ifeq ($(matrix),1)
+ bender_defs += --define MATRIX_ENABLE=1
+ endif
++ifeq ($(ddr),1)
++bender_defs += --define PROTON_DDR=1
++endif
+ bender_defs_veril := $(bender_defs) --define COMMON_CELLS_ASSERTS_OFF
+ # Targets
+ bender_common_targs := -t rtl -t cv64a6_imafdcv_sv39 -t tech_cells_generic_include_tc_sram -t tech_cells_generic_include_tc_clk -t exclude_first_pass_decoder
+ ifeq ($(matrix),1)
+ bender_common_targs += -t matrix
++endif
++ifeq ($(ddr),1)
++bender_common_targs += -t proton_ddr
+ endif
+ bender_targs_simc     := $(bender_common_targs) -t ara_test -t cva6_test
+ bender_targs_veril    := $(bender_common_targs) -t ara_test -t cva6_test -t verilator  -t tech_cells_generic_exclude_deprecated
+@@ -216,6 +222,7 @@
+   -Itb/dpi                                                                      \
+   --compiler clang                                                              \
+   -CFLAGS "-DTOPLEVEL_NAME=$(veril_top)"                                        \
++  $(if $(filter 1,$(ddr)),-CFLAGS "-DPROTON_DDR=1",)                         \
+   -CFLAGS "-DNR_LANES=$(nr_lanes)"                                              \
+   -CFLAGS -I$(ROOT_DIR)/tb/verilator/lowrisc_dv_verilator_memutil_dpi/cpp       \
+   -CFLAGS -I$(ROOT_DIR)/tb/verilator/lowrisc_dv_verilator_memutil_verilator/cpp \
+--- a/hardware/src/ara_soc.sv
++++ b/hardware/src/ara_soc.sv
+@@ -67,6 +67,9 @@
+   localparam NrAXIMasters = 1; // Actually masters, but slaves on the crossbar
+ 
+   typedef enum int unsigned {
++`ifdef PROTON_DDR
++    DDR = 4,
++`endif
+     L2MEM = 0,
+     UART  = 1,
+ `ifdef MATRIX_ENABLE
+@@ -75,17 +78,35 @@
+     CTRL  = 2
+   } axi_slaves_e;
+ `ifdef MATRIX_ENABLE
++`ifndef PROTON_DDR
+   localparam NrAXISlaves = MATRIX + 1;
++`endif
+   localparam logic [63:0] MatrixBase = 64'hE0000000;
+   localparam logic [63:0] MatrixLength = 64'h1000;
+   logic matrix_cmd_valid, matrix_cmd_macc, matrix_cmd_ready, matrix_done;
+ `else
++`ifndef PROTON_DDR
+   localparam NrAXISlaves = CTRL + 1;
+ `endif
++`endif
++
++`ifdef PROTON_DDR
++  localparam NrAXISlaves = DDR + 1;
++  localparam logic [63:0] DDRBase = 64'h1_0000_0000;
++  localparam logic [63:0] DDRLength = 64'h1_0000_0000;
++  initial if (AxiDataWidth != 64) $fatal(1, "DDR simulation requires two lanes");
++`ifndef MATRIX_ENABLE
++  initial $fatal(1, "Proton DDR configuration requires MATRIX_ENABLE");
++`endif
++`endif
+ 
+   // Memory Map
+-  // 1GByte of DDR (split between two chips on Genesys2)
++`ifdef PROTON_DDR
++  // Decode the actual 16 MiB SRAM, eliminating the legacy window aliases.
++  localparam logic [63:0] DRAMLength = 64'(L2NumWords) * (AxiDataWidth / 8);
++`else
+   localparam logic [63:0] DRAMLength = 64'h40000000;
++`endif
+   localparam logic [63:0] UARTLength = 64'h1000;
+   localparam logic [63:0] CTRLLength = 64'h1000;
+ 
+@@ -160,6 +181,9 @@
+ 
+   axi_pkg::xbar_rule_64_t [NrAXISlaves-1:0] routing_rules;
+   assign routing_rules = '{
++`ifdef PROTON_DDR
++    '{idx: DDR, start_addr: DDRBase, end_addr: DDRBase + DDRLength},
++`endif
+ `ifdef MATRIX_ENABLE
+     '{idx: MATRIX, start_addr: MatrixBase, end_addr: MatrixBase + MatrixLength},
+ `endif
+@@ -273,6 +297,33 @@
+ 
+   // One-cycle latency
+   `FF(l2_rvalid, l2_req, 1'b0);
++
++`ifdef PROTON_DDR
++  // Stable waveform names for independent AXI boundary/error checks.
++  wire ddr_check_ar_valid = system_axi_req.ar_valid;
++  wire ddr_check_ar_ready = system_axi_resp.ar_ready;
++  wire [63:0] ddr_check_ar_addr = system_axi_req.ar.addr;
++  wire [AxiSocIdWidth-1:0] ddr_check_ar_id = system_axi_req.ar.id;
++  wire [7:0] ddr_check_ar_len = system_axi_req.ar.len;
++  wire ddr_check_r_valid = system_axi_resp.r_valid;
++  wire ddr_check_r_ready = system_axi_req.r_ready;
++  wire [AxiSocIdWidth-1:0] ddr_check_r_id = system_axi_resp.r.id;
++  wire [1:0] ddr_check_r_resp = system_axi_resp.r.resp;
++  wire ddr_check_r_last = system_axi_resp.r.last;
++  wire ddr_check_aw_valid = system_axi_req.aw_valid;
++  wire ddr_check_aw_ready = system_axi_resp.aw_ready;
++  wire [63:0] ddr_check_aw_addr = system_axi_req.aw.addr;
++  wire [AxiSocIdWidth-1:0] ddr_check_aw_id = system_axi_req.aw.id;
++  wire ddr_check_b_valid = system_axi_resp.b_valid;
++  wire ddr_check_b_ready = system_axi_req.b_ready;
++  wire [AxiSocIdWidth-1:0] ddr_check_b_id = system_axi_resp.b.id;
++  wire [1:0] ddr_check_b_resp = system_axi_resp.b.resp;
++  // External memory is idempotent, non-executable and uncached in this first target.
++  proton_ddr_sim #(.req_t(soc_wide_req_t), .resp_t(soc_wide_resp_t),
++    .IdWidth(AxiSocIdWidth), .Base(DDRBase), .Bytes(DDRLength)) i_ddr (
++    .clk_i, .rst_ni, .req_i(periph_wide_axi_req[DDR]),
++    .resp_o(periph_wide_axi_resp[DDR]));
++`endif
+ 
+   ////////////
+   //  UART  //
+--- a/hardware/tb/verilator/ara_tb.cpp
++++ b/hardware/tb/verilator/ara_tb.cpp
+@@ -24,7 +24,13 @@
+                  VerilatorSimCtrlFlags::ResetPolarityNegative);
+ 
+   // Initialize the DRAM
++#ifdef PROTON_DDR
++  MemAreaLoc l2_mem = {.base=0x80000000, .size=0x01000000};
++  MemAreaLoc ddr_mem = {.base=0x100000000ULL, .size=0x100000000ULL};
++  memutil.RegisterMemoryArea("ddr", "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr", 64, &ddr_mem);
++#else
+   MemAreaLoc l2_mem = {.base=0x80000000, .size=0x00100000};
++#endif
+   memutil.RegisterMemoryArea(
+                              "ram", "TOP.ara_tb_verilator.dut.i_ara_soc.i_dram", 64*NR_LANES/2, &l2_mem);
+   simctrl.RegisterExtension(&memutil);
+--- a/hardware/tb/verilator/lowrisc_dv_verilator_memutil_dpi/cpp/dpi_memutil.cc
++++ b/hardware/tb/verilator/lowrisc_dv_verilator_memutil_dpi/cpp/dpi_memutil.cc
+@@ -453,7 +453,7 @@
+               << "' because it has zero size.\n";
+     return false;
+   }
+-  uint32_t addr_top = addr_loc->base + (addr_loc->size - 1);
++  uint64_t addr_top = addr_loc->base + (addr_loc->size - 1);
+   if (addr_top < addr_loc->base) {
+     std::cerr << "ERROR: Can not register '" << name
+               << "' because it overflows the top of the address space.\n";
+@@ -485,8 +485,8 @@
+     std::cout << "\t'" << m.name << "' (" << m.width_byte * 8
+               << "bits) at location: '" << m.location << "'";
+     if (m.addr_loc.size) {
+-      uint32_t low = m.addr_loc.base;
+-      uint32_t high = m.addr_loc.base + m.addr_loc.size - 1;
++      uint64_t low = m.addr_loc.base;
++      uint64_t high = m.addr_loc.base + m.addr_loc.size - 1;
+       std::cout << " (LMA range [0x" << std::hex << low << ", 0x" << high
+                 << "])" << std::dec;
+     }
+@@ -563,7 +563,7 @@
+             << "' (the scope associated with region `" << mem_area.name
+             << "', used by a segment that starts at LMA 0x" << std::hex
+             << mem_area.addr_loc.base + seg_rng.lo << ").";
+-        // throw std::runtime_warn(oss.str());
++        throw std::runtime_error(oss.str());
+       }
+     }
+   }
+@@ -594,7 +594,7 @@
+         GetRegionForSegment(path, i, phdr.p_paddr, phdr.p_memsz);
+ 
+     // Check that the segment is aligned correctly for the memory
+-    uint32_t local_base = phdr.p_paddr - mem_area.addr_loc.base;
++    uint64_t local_base = phdr.p_paddr - mem_area.addr_loc.base;
+     if (local_base % mem_area.width_byte) {
+       std::ostringstream oss;
+       oss << "Segment " << i << " has LMA 0x" << std::hex << phdr.p_paddr
+@@ -610,7 +610,8 @@
+     // uint32_t's into a size_t. But we do need to check the segment
+     // actually fits in the file
+     size_t off_end = (size_t)phdr.p_offset + phdr.p_filesz;
+-    if (file_size < off_end) {
++    if (phdr.p_filesz > phdr.p_memsz || phdr.p_offset > file_size ||
++        phdr.p_filesz > file_size - phdr.p_offset) {
+       std::ostringstream oss;
+       oss << "phdr for segment " << i << " claims to end at offset 0x"
+           << std::hex << off_end - 1 << ", but the file only has size 0x"
+@@ -641,8 +642,8 @@
+ }
+ 
+ const MemArea &DpiMemUtil::GetRegionForSegment(const std::string &path,
+-                                               int seg_idx, uint32_t lma,
+-                                               uint32_t mem_sz) const {
++                                               int seg_idx, uint64_t lma,
++                                               uint64_t mem_sz) const {
+   assert(mem_sz > 0);
+ 
+   auto mem_area_it = addr_to_mem_.find(lma);
+@@ -657,15 +658,15 @@
+   assert(mem_area);
+   assert(mem_area->addr_loc.base <= lma);
+ 
+-  uint32_t lma_top = lma + (mem_sz - 1);
++  uint64_t lma_top = lma + (mem_sz - 1);
+   if (lma_top < lma) {
+     std::ostringstream oss;
+     oss << "Integer overflow for top address of segment " << seg_idx << ".";
+     throw ElfError(path, oss.str());
+   }
+ 
+-  uint32_t local_base = lma - mem_area->addr_loc.base;
+-  uint32_t local_top = lma_top - mem_area->addr_loc.base;
++  uint64_t local_base = lma - mem_area->addr_loc.base;
++  uint64_t local_top = lma_top - mem_area->addr_loc.base;
+ 
+   if (mem_area->addr_loc.size <= local_top) {
+     std::ostringstream oss;
+--- a/hardware/tb/verilator/lowrisc_dv_verilator_memutil_dpi/cpp/dpi_memutil.h
++++ b/hardware/tb/verilator/lowrisc_dv_verilator_memutil_dpi/cpp/dpi_memutil.h
+@@ -21,8 +21,8 @@
+ // the area, and should correspond to an ELF file's LMA. size is the
+ // length of the area in bytes.
+ struct MemAreaLoc {
+-  uint32_t base;
+-  uint32_t size;
++  uint64_t base;
++  uint64_t size;
+ };
+ 
+ struct MemArea {
+@@ -148,7 +148,7 @@
+  private:
+   // Memory area registry
+   std::map<std::string, MemArea> name_to_mem_;
+-  RangedMap<uint32_t, MemArea *> addr_to_mem_;
++  RangedMap<uint64_t, MemArea *> addr_to_mem_;
+ 
+   // Staging area, loaded by StageElf. The map is keyed by names of memories
+   // stored in name_to_mem_. We also ensure that every segment in a StagedMem
+@@ -162,5 +162,5 @@
+    * Raises a std::exception if none is found.
+    */
+   const MemArea &GetRegionForSegment(const std::string &path, int seg_idx,
+-                                     uint32_t lma, uint32_t mem_sz) const;
++                                     uint64_t lma, uint64_t mem_sz) const;
+ };

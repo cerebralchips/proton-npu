@@ -24,6 +24,8 @@ ARM64 Linux VM.
 | INT8 matrix engine | 4×4 PEs, four signed INT8 products per PE, INT32 accumulation |
 | Matrix operation | `C[4][4] += A[4][16] × transpose(BT[4][16])`, modulo 2³² |
 | Integration | Custom-1 `mzero` / `mmacc`; AXI-Lite mapped buffers at `0xe0000000` |
+| Internal memory | 16 MiB SRAM at `0x80000000`, shared by code and working buffers |
+| Optional external memory | 4 GiB functional DDR model at `0x100000000`; separate `PROTON_DDR` simulation target |
 | Software | LLVM 20.1.0, RVV intrinsics and inline `.insn`; Newlib bare-metal runtime |
 
 The matrix buffers are filled and read by CPU loads/stores. This version has no
@@ -61,12 +63,26 @@ Run only one build/simulation at a time; the launcher enforces a guest lock.
 ./scripts/ara matrix-smoke   # Nine selected scalar/vector regression tests
 ./scripts/ara matrix-negative # Ensure wrong results and timeouts are rejected
 ./scripts/ara smoke          # Matrix-disabled baseline regression
+./scripts/ara ddr-test       # Optional 16 MiB SRAM + 4 GiB functional DDR target
+./scripts/ara ddr-sweep-smoke # Dense vector DDR and DDR/SRAM/DDR checks on bounded ranges
+./scripts/ara ddr-add         # Live DDR -> SRAM -> vector addition -> DDR, with PASS/FAIL
 ```
 
 Open the generated FST or extracted `matrix.vcd` in a waveform viewer. Retired
 instructions and tagged command events are exported as CSV beside the waveform.
 The [waveform guide](docs/waveforms.md) and [matrix run guide](docs/matrix-running.md)
 explain these files.
+
+The [DDR simulation guide](docs/ddr-simulation.md) describes the separate memory
+map, bare-metal checks and independently checked external-memory traces. This
+target models external memory functionally; it does not implement a DDR PHY.
+The [Proton SDK](https://github.com/cerebralchips/proton-sdk) owns IREE/model
+deployment, weight placement and numerical model validation. Its DDR profile
+places packed INT8 weights in external memory and working buffers in SRAM; see
+the [SDK reproduction guide](https://github.com/cerebralchips/proton-sdk/blob/main/docs/reproduce.md)
+for the qualified hardware revision and commands.
+The guide also includes a [timed vector-add exercise](docs/ddr-simulation.md#try-a-timed-ddr--sram--vector-addition--ddr-program)
+with a small example and an automatically calibrated, approximately one-hour run.
 
 ## Verification baseline
 
@@ -85,6 +101,7 @@ Full logs, ELFs and waveforms are regenerated locally under ignored `artifacts/`
 | Path | Purpose |
 | --- | --- |
 | `hardware/matrix/` | Matrix controller, buffers, router and pinned compute RTL |
+| `hardware/memory/` | Optional sparse external-memory model for Verilator |
 | `patches/ara/`, `patches/cva6/` | Reproducible integration and build changes |
 | `examples/` | Bare-metal scalar/vector and scalar/vector/matrix applications |
 | `tests/matrix/` | Independent arithmetic oracle and RTL testbenches |

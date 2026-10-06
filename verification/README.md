@@ -50,6 +50,30 @@ The final package reran the [unit gates](2026-10-04/matrix-unit.json) and
 setup checks and remaining limits; [browser checks](2026-10-04/browser-checks.json)
 cover all six pages at desktop/mobile widths and offline opening.
 
+## Optional SRAM + DDR target — 6 October 2026
+
+[DDR verification](2026-10-06/ddr.json) records the source hashes, bare-metal
+results, AXI unit gate, loader rejection cases, combined matrix execution and
+existing regressions. [Independent FST checks](2026-10-06/ddr-waveform.json)
+record 8,637 reads and 8,428 writes plus boundary AXI errors. Run
+`./scripts/ara ddr-test` to reproduce. See the [DDR guide](../docs/ddr-simulation.md)
+for coverage and the pinned CPU's bus-error/exception limitation.
+
+[Dense vector sweeps](2026-10-06/ddr-sweeps.json) record both DDR → DDR and
+DDR → SRAM → DDR bounded checks, independent high-address FST checks, corruption
+detection, and estimated full-run costs. Reproduce with `./scripts/ara ddr-sweep-smoke`.
+All-byte 4 GiB execution was not run; an additional vector initialization sequence
+has a retained unresolved stall. The record distinguishes these limits from the
+passing transfer tests.
+
+[Timed vector addition](2026-10-06/ddr-vector-add.json) records the new bare-metal
+DDR/SRAM buffer addition, scalar per-element comparison, positive/negative gates
+and calibrated one-minute execution. `./scripts/ara ddr-add-test` runs the sanity
+gates; `./scripts/ara ddr-add --target-seconds 3600` sizes an approximately one-hour
+run for the local simulator. The hour-long execution itself is not part of the
+recorded validation. Progress, PASS/FAIL and simulator-only `time -p` output are
+visible without waveforms.
+
 ---
 
 **[Cerebral Chips](https://www.cerebralchips.com) · Proton NPU**

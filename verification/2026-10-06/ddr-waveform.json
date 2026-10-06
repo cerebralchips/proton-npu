@@ -1,0 +1,196 @@
+{
+  "result": "PASS",
+  "reads_checked": 8637,
+  "writes_checked": 8428,
+  "touched_mib_regions": 4096,
+  "min_address": "0x100000000",
+  "max_address": "0x1fffffff8",
+  "memory_response_cycles": [
+    8
+  ],
+  "request_backpressure_cycles": 24882,
+  "byte_strobes": [
+    1,
+    2,
+    4,
+    8,
+    12,
+    15,
+    16,
+    32,
+    64,
+    128,
+    240,
+    255
+  ],
+  "axi_read_beats": 9703,
+  "axi_write_responses": 9249,
+  "boundary_read_decerr": [
+    "0x81000000",
+    "0xfffffff8",
+    "0x200000000"
+  ],
+  "boundary_write_decerr": [
+    "0x81000000",
+    "0xfffffff8",
+    "0x200000000"
+  ],
+  "signals": {
+    "clk": {
+      "id": "!",
+      "width": 1,
+      "path": "TOP.clk_i"
+    },
+    "reset": {
+      "id": "\"",
+      "width": 1,
+      "path": "TOP.rst_ni"
+    },
+    "ar_valid": {
+      "id": "8!",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_ar_valid"
+    },
+    "ar_ready": {
+      "id": "9!",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_ar_ready"
+    },
+    "ar_addr": {
+      "id": ":!",
+      "width": 64,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_ar_addr"
+    },
+    "ar_id": {
+      "id": ";!",
+      "width": 5,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_ar_id"
+    },
+    "ar_len": {
+      "id": "<!",
+      "width": 8,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_ar_len"
+    },
+    "r_valid": {
+      "id": "=!",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_r_valid"
+    },
+    "r_ready": {
+      "id": ">!",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_r_ready"
+    },
+    "r_id": {
+      "id": "?!",
+      "width": 5,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_r_id"
+    },
+    "r_resp": {
+      "id": "@!",
+      "width": 2,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_r_resp"
+    },
+    "r_last": {
+      "id": "A!",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_r_last"
+    },
+    "aw_valid": {
+      "id": "B!",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_aw_valid"
+    },
+    "aw_ready": {
+      "id": "C!",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_aw_ready"
+    },
+    "aw_addr": {
+      "id": "D!",
+      "width": 64,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_aw_addr"
+    },
+    "aw_id": {
+      "id": "E!",
+      "width": 5,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_aw_id"
+    },
+    "b_valid": {
+      "id": "F!",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_b_valid"
+    },
+    "b_ready": {
+      "id": "G!",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_b_ready"
+    },
+    "b_id": {
+      "id": "H!",
+      "width": 5,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_b_id"
+    },
+    "b_resp": {
+      "id": "I!",
+      "width": 2,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.ddr_check_b_resp"
+    },
+    "mem_req": {
+      "id": "1>",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.mem_req"
+    },
+    "mem_gnt": {
+      "id": "2>",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.mem_gnt"
+    },
+    "mem_we": {
+      "id": "3>",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.mem_we"
+    },
+    "mem_rvalid": {
+      "id": "4>",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.mem_rvalid"
+    },
+    "mem_error": {
+      "id": "5>",
+      "width": 1,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.mem_error"
+    },
+    "mem_addr": {
+      "id": "6>",
+      "width": 64,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.mem_addr"
+    },
+    "mem_wdata": {
+      "id": "7>",
+      "width": 64,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.mem_wdata"
+    },
+    "mem_rdata": {
+      "id": "8>",
+      "width": 64,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.mem_rdata"
+    },
+    "mem_strb": {
+      "id": "9>",
+      "width": 8,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.mem_strb"
+    },
+    "latency": {
+      "id": ":>",
+      "width": 32,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.latency"
+    },
+    "stall_cycles": {
+      "id": ";>",
+      "width": 32,
+      "path": "TOP.ara_tb_verilator.dut.i_ara_soc.i_ddr.stall_cycles"
+    }
+  },
+  "exhaustive_byte_sweep": false
+}
