@@ -23,7 +23,7 @@
 <div class="nav-label">Project</div>
 <nav aria-label="Project resources"><a href="https://www.cerebralchips.com">Cerebral Chips website ↗</a><a href="https://github.com/cerebralchips/proton-npu/tree/hardware">Source repository ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/matrix-running.md">Run commands ↗</a><a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/status.md">Verification status ↗</a>
 </nav>
-</div><small>Hardware + external-memory simulation<br>RV64 · RVV · INT8 matrix<br>Documentation: 6 October 2026</small>
+</div><small>Hardware + external-memory simulation<br>RV64 · RVV · INT8 matrix<br>Documentation: 7 October 2026</small>
 </aside>
 <main id="main">
 <header class="hero">
@@ -47,11 +47,11 @@
 </div>
 </div>
 <h2>The complete system</h2>
-<figure class="figure"><a href="assets/system.svg" aria-label="Open System block diagram: Proton SDK, RISC-V core, vector and matrix units, 16 MiB SRAM and 4 GiB simulated DDR at full size"><img src="assets/system.svg" alt="System block diagram: Proton SDK, RISC-V core, vector and matrix units, 16 MiB SRAM and 4 GiB simulated DDR"></a>
-<figcaption>Proton SDK compiles AI models into bare-metal programs. Packed projection weights live in 4 GiB simulated DDR; code and working buffers use 16 MiB SRAM. Blue routes instructions and completions. Teal carries memory traffic. The dashed amber path carries matrix commands. The matrix is an AXI target, not a memory-fetching DMA engine. <a href="assets/system.svg">Open full-size diagram ↗</a>
+<figure class="figure"><a href="assets/system.svg" aria-label="Open System block diagram: Proton SDK, RISC-V CPU, vector and matrix units, programmable DMA, 16 MiB SRAM and 4 GiB simulated DDR at full size"><img src="assets/system.svg" alt="System block diagram: Proton SDK, RISC-V CPU, vector and matrix units, programmable DMA, 16 MiB SRAM and 4 GiB simulated DDR"></a>
+<figcaption>Proton SDK compiles AI models into bare-metal programs. Packed projection weights live in 4 GiB simulated DDR; code and working buffers use 16 MiB SRAM. The optional DMA has two AXI connections: CPU-programmed registers and an independent master for SRAM ↔ DDR transfers. Blue shows control and register programming; teal shows memory traffic; dashed amber carries matrix commands. Matrix tile buffers remain CPU-fed. <a href="assets/system.svg">Open full-size diagram ↗</a>
 </figcaption>
 </figure>
-<div class="callout"><p><strong>Optional programmable DMA.</strong> A separate AXI master moves data between SRAM and DDR, with a transpose flag, programmable row strides and 8/16/32/64-bit elements. The CPU programs and polls it; software manages cache ownership. <a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/dma.md">DMA design and verification →</a></p></div>
+<div class="callout"><p><strong>Optional programmable DMA.</strong> A separate AXI master moves data between SRAM and DDR, with a transpose flag, programmable row strides and 8/16/32/64-bit elements. The CPU programs and polls registers at <code>0xe0001000</code>. DMA is not cache coherent: the qualified bare-metal test disables the data cache and uses fences around transfers. Proton SDK DMA scheduling is not yet integrated. <a href="https://github.com/cerebralchips/proton-npu/blob/hardware/docs/dma.md">DMA design and verification →</a></p></div>
 <div class="cards">
 <article class="card"><span class="number">01</span>
 <h3>64-bit RISC-V core</h3>
